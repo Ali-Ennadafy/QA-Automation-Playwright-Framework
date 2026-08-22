@@ -3349,7 +3349,459 @@ The environment strategy will be considered effective when:
 
 ## Final Principle
 
-**A reliable automation framework requires a predictable and well-controlled execution environment. Environment configuration, test data, credentials, browser settings, and execution infrastructure should remain separate from test logic so that the same automation can run consistently across supported environments.**
+**A reliable automation framework requires a predictable and well-controlled execution environment. Environment configuration, test data, credentials, browser settings, and 
+execution infrastructure should remain separate from test logic so that the same automation can run consistently across supported environments.**
 
+
+# 11. Browser / Device / OS Coverage
+
+The nopCommerce QA Automation Framework will define a controlled browser, device, viewport, and operating-system coverage strategy to provide confidence that critical application functionality behaves consistently across supported execution environments.
+
+Coverage will be prioritized according to business risk, user impact, browser usage, technical differences, and automation cost.
+
+The objective is not to execute the complete test suite against every possible browser and device combination, but to achieve **risk-based compatibility coverage** for the most important user workflows.
+
+---
+
+## 11.1 Coverage Objectives
+
+The browser, device, and operating-system strategy aims to:
+
+* Validate critical user journeys across supported browser engines.
+* Detect browser-specific functional defects.
+* Validate responsive behavior across representative viewport sizes.
+* Support repeatable local and CI/CD execution.
+* Prioritize high-risk workflows for broader compatibility coverage.
+* Avoid unnecessary duplication across low-risk environments.
+* Provide a maintainable and scalable browser/device matrix.
+* Identify environment-specific failures during test analysis.
+
+---
+
+## 11.2 Browser Coverage
+
+The initial automated browser coverage will include the three browser engines supported by Playwright:
+
+* Chromium
+* Firefox
+* WebKit
+
+### Browser Roles
+
+| Browser  | Role                                       | Priority |
+| -------- | ------------------------------------------ | -------- |
+| Chromium | Primary development and regression browser | P0       |
+| Firefox  | Cross-browser validation                   | P1       |
+| WebKit   | Cross-browser and Safari-like validation   | P1       |
+
+Chromium will be used as the primary browser for:
+
+* Framework development
+* Fast local execution
+* Smoke testing
+* Core regression testing
+* CI feedback
+
+Firefox and WebKit will be used primarily for:
+
+* Critical workflow validation
+* Cross-browser regression
+* Compatibility checks
+* Selected negative and functional scenarios
+
+---
+
+## 11.3 Browser Coverage Strategy
+
+Not every test will be executed against every browser.
+
+Coverage will be selected according to risk.
+
+### P0 / Critical Workflows
+
+Critical workflows should receive the broadest browser coverage.
+
+Examples:
+
+* Login
+* Product discovery
+* Product details
+* Shopping cart
+* Checkout
+* Order placement
+* Order confirmation
+* Customer account access
+* Critical administration workflows
+
+Expected browser coverage:
+
+```text
+Chromium
+Firefox
+WebKit
+```
+
+### P1 / High-Risk Workflows
+
+P1 scenarios should normally be executed on:
+
+```text
+Chromium
++
+Selected Firefox / WebKit coverage
+```
+
+### P2 / Medium-Risk Workflows
+
+P2 scenarios may primarily execute on:
+
+```text
+Chromium
+```
+
+with selected cross-browser execution where the functionality presents meaningful compatibility risk.
+
+### P3 / Low-Risk Workflows
+
+P3 scenarios may receive limited browser coverage unless a specific defect or business requirement increases their priority.
+
+---
+
+## 11.4 Browser Version Strategy
+
+The framework should use browser versions supported by the installed Playwright release.
+
+Browser version changes should be treated as an environment change and reviewed when they may affect:
+
+* Test stability
+* Browser-specific behavior
+* Rendering
+* Authentication
+* File handling
+* Network behavior
+
+The project should avoid hard-coding assumptions about browser versions inside individual tests.
+
+---
+
+## 11.5 Desktop Operating System Coverage
+
+The initial primary development environment is:
+
+* Windows 64-bit
+
+The CI environment will use the operating system provided by the selected GitHub Actions runner.
+
+The automation framework should remain as OS-independent as possible.
+
+OS-specific testing will be increased when:
+
+* A requirement explicitly depends on the operating system.
+* A defect is identified as OS-specific.
+* A business requirement requires broader OS coverage.
+* Browser behavior differs materially across operating systems.
+
+---
+
+## 11.6 CI Operating System Strategy
+
+The initial CI strategy will use a consistent Linux-based GitHub Actions runner where supported by the project configuration.
+
+The purpose is to provide:
+
+* Repeatable execution
+* Stable CI conditions
+* Consistent browser automation
+* Fast feedback
+* Reproducible failures
+
+The project may later add Windows or other operating-system runners when cross-OS validation becomes necessary.
+
+---
+
+## 11.7 Viewport Coverage
+
+The automation framework will validate representative viewport sizes rather than attempting to cover every possible screen resolution.
+
+### Desktop Viewports
+
+Examples:
+
+* Standard desktop
+* Large desktop
+
+### Mobile / Tablet Viewports
+
+Examples:
+
+* Representative mobile viewport
+* Representative tablet viewport
+
+The exact viewport dimensions should be maintained centrally through Playwright configuration or device projects.
+
+---
+
+## 11.8 Responsive Testing
+
+Responsive testing will focus on workflows where layout and interaction behavior may affect usability or functionality.
+
+Priority areas include:
+
+* Main navigation
+* Login
+* Registration
+* Product discovery
+* Search
+* Product details
+* Shopping cart
+* Checkout
+* Customer account
+* Critical administration workflows where applicable
+
+Examples of responsive risks include:
+
+* Hidden or inaccessible controls
+* Broken navigation
+* Incorrect responsive layout
+* Horizontal overflow
+* Unusable forms
+* Checkout controls becoming inaccessible
+* Incorrect responsive menus
+
+---
+
+## 11.9 Mobile and Tablet Device Strategy
+
+Playwright device emulation will be used for selected mobile and tablet validation.
+
+Representative device profiles may be selected based on:
+
+* Browser engine
+* Viewport size
+* Device characteristics
+* Business relevance
+
+Mobile emulation will be considered a compatibility technique.
+
+It will **not** be treated as a complete replacement for real-device testing where hardware-specific behavior is important.
+
+---
+
+## 11.10 Real Device Testing
+
+Real-device testing is outside the initial scope of the Playwright framework.
+
+Where required in a future phase, real-device testing may be introduced through dedicated platforms or device labs.
+
+Potential future coverage may include:
+
+* Physical Android devices
+* Physical iOS devices
+* Different device screen sizes
+* Device-specific browser behavior
+* Touch interaction
+* Hardware-specific behavior
+
+The current project will primarily rely on browser and device emulation for responsive validation.
+
+---
+
+## 11.11 Browser / Device Matrix
+
+The initial target matrix is:
+
+| Environment        | Chromium |  Firefox |   WebKit |
+| ------------------ | -------: | -------: | -------: |
+| Desktop - Standard |        ✅ |        ✅ |        ✅ |
+| Desktop - Large    |        ✅ | Selected | Selected |
+| Mobile Viewport    |        ✅ | Selected |        ✅ |
+| Tablet Viewport    |        ✅ | Selected |        ✅ |
+
+The matrix will be refined as additional requirements, defects, and compatibility risks are identified.
+
+---
+
+## 11.12 Risk-Based Coverage Matrix
+
+Browser and device coverage will be aligned with test priority.
+
+| Priority    | Chromium | Firefox       | WebKit        | Mobile/Tablet           |
+| ----------- | -------- | ------------- | ------------- | ----------------------- |
+| P0 Critical | Full     | Full          | Full          | Selected critical flows |
+| P1 High     | Full     | Selected/High | Selected/High | Selected                |
+| P2 Medium   | Full     | Selected      | Selected      | As needed               |
+| P3 Low      | Selected | Limited       | Limited       | Limited                 |
+
+This strategy avoids executing every scenario across every environment when the additional coverage does not provide meaningful value.
+
+---
+
+## 11.13 Authentication and Session Coverage
+
+Authentication-related workflows should receive broad browser coverage because authentication failures can affect a large portion of the application.
+
+Priority scenarios include:
+
+* Login
+* Logout
+* Session persistence
+* Session invalidation
+* Protected-page access
+* Role-based access
+* Customer authentication
+* Administrator authentication
+
+These scenarios should receive high priority during cross-browser regression.
+
+---
+
+## 11.14 E-Commerce Critical Workflow Coverage
+
+Critical customer workflows will receive the highest compatibility priority.
+
+### Customer Purchase
+
+```text id="q7m2wb"
+Login
+   ↓
+Search
+   ↓
+Product Details
+   ↓
+Add to Cart
+   ↓
+Checkout
+   ↓
+Order Placement
+   ↓
+Order Confirmation
+```
+
+### Customer Account
+
+```text id="z4u2qp"
+Login
+   ↓
+Profile
+   ↓
+Address
+   ↓
+Save
+   ↓
+Verify
+```
+
+### Administration
+
+```text id="x7b6lq"
+Admin Login
+   ↓
+Product Management
+   ↓
+Order Management
+```
+
+These workflows should receive broader browser coverage than low-risk secondary functionality.
+
+---
+
+## 11.15 Browser-Specific Defect Handling
+
+When a test fails in only one browser, the failure will be investigated as a potential compatibility issue.
+
+Investigation should consider:
+
+```text id="9q3rwb"
+Test Failure
+     ↓
+Test / Data Issue?
+     ↓
+Environment Issue?
+     ↓
+Browser-Specific Behavior?
+     ↓
+Application Defect?
+```
+
+The defect should be classified based on evidence rather than assuming that the browser is automatically responsible.
+
+---
+
+## 11.16 Coverage Maintenance
+
+The browser/device matrix will be reviewed when:
+
+* New browsers become relevant.
+* Browser versions change significantly.
+* User behavior changes.
+* New devices become important.
+* New requirements introduce compatibility risks.
+* Browser-specific defects are discovered.
+* Application technology changes.
+* Business priorities change.
+
+Coverage will be adjusted based on observed risk rather than maintained as a static list.
+
+---
+
+## 11.17 Execution Strategy
+
+The framework will support targeted browser execution.
+
+Examples:
+
+### Fast Local Validation
+
+```text id="8ku7ck"
+Chromium
+↓
+Targeted tests
+```
+
+### Smoke
+
+```text id="5sl4np"
+Chromium
+↓
+Critical smoke suite
+```
+
+### Regression
+
+```text id="n7c8dy"
+Chromium
++
+Firefox
++
+WebKit
+```
+
+### Compatibility Validation
+
+```text id="m3tr2x"
+Critical workflows
++
+Selected viewport/device configurations
+```
+
+---
+
+## 11.18 Browser / Device Coverage Success Criteria
+
+The coverage strategy will be considered effective when:
+
+* Critical workflows are validated across the required browsers.
+* Browser-specific defects can be identified and investigated.
+* Responsive behavior is validated on representative viewports.
+* CI execution remains reproducible.
+* Browser coverage is aligned with business risk.
+* The matrix can be extended without major framework changes.
+* Low-value execution duplication is minimized.
+
+---
+
+## Final Principle
+
+**Browser and device coverage should be driven by business risk, user impact, and compatibility value rather than by attempting to test every possible environment. Critical workflows receive broad coverage, while lower-risk functionality receives proportionally lighter coverage.**
 
 
