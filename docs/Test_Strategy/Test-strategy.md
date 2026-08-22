@@ -5692,3 +5692,646 @@ The CI/CD strategy will be considered effective when:
 The pipeline must prioritize:
 
 **Fast Feedback + Reliable Execution + Clear Failure Classification + Evidence + Quality Gates + Continuous Improvement.**
+
+
+# 15. Reporting & Evidence
+
+The nopCommerce QA Automation Framework will provide structured reporting and evidence collection to make test execution results understandable, traceable, and actionable.
+
+The objective is to ensure that QA engineers, developers, and relevant stakeholders can quickly determine what was tested, what passed, what failed, why a failure occurred, and what evidence supports the result.
+
+Reporting will support both day-to-day test investigation and higher-level release quality assessment.
+
+---
+
+## 15.1 Reporting Objectives
+
+The reporting strategy aims to:
+
+* Provide clear visibility into test execution.
+* Identify failed and blocked tests quickly.
+* Provide actionable evidence for failure investigation.
+* Maintain traceability between requirements, tests, executions, and defects.
+* Provide reliable information for regression and release decisions.
+* Monitor automation stability and execution trends.
+* Distinguish application failures from test, environment, and infrastructure failures.
+* Maintain historical execution information where useful.
+* Support both technical and business-level reporting.
+
+The objective is not to generate the largest possible number of reports, but to provide **useful, accurate, and actionable information**.
+
+---
+
+## 15.2 Reporting Levels
+
+Reporting will operate at multiple levels.
+
+### Level 1 — Test Execution Report
+
+Answers:
+
+> **What happened during this test run?**
+
+Includes:
+
+* Total tests
+* Passed tests
+* Failed tests
+* Skipped tests
+* Blocked tests
+* Retried tests
+* Flaky tests where identified
+* Execution duration
+* Browser
+* Environment
+* Failed test details
+
+---
+
+### Level 2 — QA Quality Report
+
+Answers:
+
+> **What is the current quality status?**
+
+Includes:
+
+* Requirement coverage
+* Test coverage
+* Automation coverage
+* Critical workflow coverage
+* Regression status
+* Defect status
+* Blocking issues
+* Residual risks
+* Known limitations
+
+---
+
+### Level 3 — Engineering / Management Reporting
+
+Answers:
+
+> **Is the testing and automation process effective and sustainable?**
+
+Includes:
+
+* Pass/failure trends
+* Flaky-test trend
+* Execution-time trend
+* CI stability
+* Automation coverage trend
+* Defect trend
+* Maintenance indicators
+* Quality risks
+
+---
+
+## 15.3 Playwright Execution Reporting
+
+The primary automation reporting mechanism will be Playwright's reporting capabilities.
+
+The primary human-readable report will be:
+
+**Playwright HTML Report**
+
+The report should provide visibility into:
+
+* Test hierarchy
+* Test names
+* Test status
+* Execution duration
+* Errors
+* Retry information
+* Attachments
+* Screenshots
+* Traces
+* Videos where configured
+
+The HTML report is intended primarily for human investigation and debugging.
+
+---
+
+## 15.4 Machine-Readable Reporting
+
+Where CI/CD integration requires machine-readable results, the framework may generate formats such as:
+
+* JUnit XML
+* JSON
+
+These formats may be consumed by:
+
+* CI systems
+* Build summaries
+* Dashboards
+* Automated analysis tools
+* Quality reporting systems
+
+Machine-readable reports should be generated consistently so that results can be compared across executions.
+
+---
+
+## 15.5 Test Execution Summary
+
+Every significant test execution should produce a concise summary.
+
+Example:
+
+| Metric      |  Value |
+| ----------- | -----: |
+| Total Tests |    120 |
+| Passed      |    108 |
+| Failed      |      7 |
+| Skipped     |      3 |
+| Blocked     |      1 |
+| Retried     |      4 |
+| Duration    | 8m 42s |
+
+The summary must provide enough context to interpret the numbers correctly.
+
+For example:
+
+A 90% pass rate does not automatically indicate acceptable quality if the remaining failures contain critical checkout tests.
+
+---
+
+## 15.6 Pass Rate
+
+Pass rate may be calculated as:
+
+```text id="pf8l17"
+Passed Tests
+───────────── × 100
+Executed Tests
+```
+
+Skipped and blocked tests should not be silently treated as passed.
+
+Pass rate should always be reviewed together with:
+
+* Failed tests
+* Blocked tests
+* Skipped tests
+* Critical workflow status
+* Severity of failures
+* Test execution completeness
+
+---
+
+## 15.7 Failure Reporting
+
+Every failed automated test should provide enough information for investigation.
+
+A failure report should identify:
+
+* Test name
+* Test ID where applicable
+* Requirement ID
+* Test Case ID
+* Automation ID where applicable
+* Browser
+* Environment
+* Execution time
+* Error message
+* Relevant stack information
+* Retry information
+* Failure evidence
+
+Example:
+
+```text id="mfx5w1"
+REQ-CHECKOUT-001
+      ↓
+TC-CHECKOUT-005
+      ↓
+checkout.spec.js
+      ↓
+FAILED
+      ↓
+Chromium / CI
+```
+
+---
+
+## 15.8 Failure Evidence
+
+Where applicable, failed tests should collect:
+
+* Screenshot
+* Playwright Trace
+* Video
+* Console logs
+* Network information
+* Error messages
+* Test output
+* Environment information
+
+Evidence should be collected according to the diagnostic value of the failure.
+
+Not every successful test requires screenshots or videos.
+
+---
+
+## 15.9 Screenshot Strategy
+
+Screenshots should primarily be collected for:
+
+* Failed tests
+* Important validation points where evidence is required
+* Investigated UI issues
+* Cross-browser failures
+* Critical workflow failures
+
+Screenshots should not be generated unnecessarily for every test step because excessive artifacts increase storage and investigation overhead.
+
+---
+
+## 15.10 Trace Strategy
+
+Playwright traces are highly valuable for debugging.
+
+Traces should be retained for failures and important diagnostic scenarios according to project configuration.
+
+A trace may provide:
+
+* Test timeline
+* Actions
+* Screenshots
+* DOM state
+* Network activity
+* Console information
+* Timing information
+
+Trace collection should be balanced against artifact size and retention needs.
+
+---
+
+## 15.11 Video Strategy
+
+Video recording may be enabled where it provides meaningful diagnostic value.
+
+Potential use cases:
+
+* Difficult UI failures
+* Intermittent failures
+* Cross-browser issues
+* Complex workflow debugging
+
+Video generation should not be enabled indiscriminately if it significantly increases CI storage and execution overhead.
+
+---
+
+## 15.12 Failure Classification Reporting
+
+A test failure should first be classified before being treated as an application defect.
+
+The reporting flow is:
+
+```text id="mpph8d"
+Test Failure
+      ↓
+Environment Issue?
+      ↓
+Test Data Issue?
+      ↓
+Automation / Framework Issue?
+      ↓
+Infrastructure / CI Issue?
+      ↓
+Application Defect?
+```
+
+The final classification should be documented when investigated.
+
+This prevents misleading defect reports and improves trust in automation results.
+
+---
+
+## 15.13 Defect Evidence
+
+When a confirmed application defect is identified, the defect report should reference the relevant test evidence.
+
+Example:
+
+```text id="u9x3w1"
+Test Failure
+    ↓
+Screenshot
+    +
+Trace
+    +
+Logs
+    +
+Test Result
+    ↓
+Defect Report
+```
+
+The objective is to allow developers to understand and reproduce the issue without requiring unnecessary back-and-forth.
+
+---
+
+## 15.14 Traceability in Reporting
+
+Reports should maintain relationships between:
+
+```text id="axz7q5"
+Requirement
+     ↓
+Test Scenario
+     ↓
+Test Case
+     ↓
+Automated Test
+     ↓
+Execution
+     ↓
+Evidence
+     ↓
+Defect
+```
+
+Where practical, reports and defect records should expose the relevant identifiers.
+
+---
+
+## 15.15 Regression Reporting
+
+Regression execution should provide a dedicated summary.
+
+Example:
+
+| Area              | Status |
+| ----------------- | ------ |
+| Authentication    | ✅      |
+| Product Discovery | ✅      |
+| Shopping Cart     | ✅      |
+| Checkout          | ❌      |
+| Orders            | ✅      |
+| Customer Account  | ✅      |
+
+The regression report should identify:
+
+* Total regression tests
+* Passed
+* Failed
+* Blocked
+* Skipped
+* Critical failures
+* Browser coverage
+* Open related defects
+* Residual risks
+
+---
+
+## 15.16 Smoke Reporting
+
+Smoke execution should produce a lightweight report focused on rapid system health.
+
+Example:
+
+```text id="yqf4t2"
+Application Available     ✅
+Login                     ✅
+Product Search            ✅
+Product Details           ✅
+Add to Cart               ✅
+Checkout Access           ✅
+```
+
+If a critical smoke test fails, the report should make the failure immediately visible.
+
+---
+
+## 15.17 Cross-Browser Reporting
+
+Cross-browser execution should allow results to be compared by browser.
+
+Example:
+
+| Test           | Chromium | Firefox | WebKit |
+| -------------- | -------- | ------- | ------ |
+| Login          | ✅        | ✅       | ✅      |
+| Product Search | ✅        | ✅       | ❌      |
+| Cart           | ✅        | ✅       | ✅      |
+| Checkout       | ✅        | ❌       | ✅      |
+
+This helps identify browser-specific behavior.
+
+---
+
+## 15.18 CI/CD Reporting
+
+CI pipelines should publish or retain relevant reports and artifacts.
+
+Typical flow:
+
+```text id="w7m9j4"
+GitHub Actions
+      ↓
+Test Execution
+      ↓
+Results
+      ↓
+HTML Report
+      ↓
+Artifacts
+      ↓
+CI Summary
+```
+
+The CI result should clearly distinguish:
+
+* Test failure
+* Infrastructure failure
+* Configuration failure
+* Environment failure
+
+---
+
+## 15.19 Artifact Management
+
+Artifacts may include:
+
+* HTML reports
+* Screenshots
+* Traces
+* Videos
+* Logs
+* JUnit XML
+* JSON results
+
+Artifacts should be associated with the relevant CI execution.
+
+Retention should follow project needs and storage limitations.
+
+---
+
+## 15.20 Historical Reporting
+
+Where practical, test results should be retained to support trend analysis.
+
+Historical information can be used to identify:
+
+* Increasing failure rates
+* Growing execution times
+* Repeated defects
+* Increasing flaky tests
+* Regression instability
+* Coverage trends
+
+Historical reporting should focus on actionable trends rather than storing data without purpose.
+
+---
+
+## 15.21 Quality Dashboard
+
+The project may maintain a lightweight QA dashboard or summary containing:
+
+```text id="8jv2sp"
+┌──────────────────────────────────────────┐
+│             QA DASHBOARD                 │
+├──────────────────────────────────────────┤
+│ Pass Rate              96%               │
+│ Requirement Coverage   94%               │
+│ Automation Coverage    82%               │
+│ Flaky Rate              1.5%             │
+│ Open Critical Defects   1                │
+├──────────────────────────────────────────┤
+│ Execution Trend                         │
+│ Defect Trend                            │
+│ Coverage Trend                          │
+│ Automation Stability                    │
+└──────────────────────────────────────────┘
+```
+
+For this portfolio project, a dedicated BI platform is not required initially.
+
+Playwright reports, GitHub Actions summaries, RTM information, and documented metrics may provide sufficient reporting capability.
+
+---
+
+## 15.22 Reporting Frequency
+
+| Report                | Frequency             | Primary Audience           |
+| --------------------- | --------------------- | -------------------------- |
+| Test Execution Report | Every execution       | QA / Developers            |
+| CI Summary            | Every pipeline        | QA / Developers            |
+| Smoke Report          | Every smoke execution | QA / Developers            |
+| Regression Report     | Per regression cycle  | QA / Engineering           |
+| Defect Summary        | Per test cycle        | QA / Developers            |
+| Coverage Report       | Per milestone/release | QA / QA Lead               |
+| Automation Health     | Periodically          | QA / Engineering           |
+| Quality Summary       | Release/milestone     | QA / Product / Engineering |
+
+---
+
+## 15.23 Release Quality Summary
+
+Before a release or major milestone, reporting should summarize:
+
+```text id="fc3qv4"
+Requirements Coverage
+        ↓
+Critical Workflow Coverage
+        ↓
+Regression Results
+        ↓
+Open Defects
+        ↓
+Critical Failures
+        ↓
+Known Risks
+        ↓
+Known Limitations
+        ↓
+QA Recommendation
+```
+
+Possible recommendation:
+
+**GO**
+
+or
+
+**NO-GO**
+
+The recommendation must be based on:
+
+* Test evidence
+* Coverage
+* Defect status
+* Critical failures
+* Residual risk
+* Business acceptance where applicable
+
+---
+
+## 15.24 Reporting Principles
+
+Reporting should be:
+
+### Accurate
+
+Results must reflect actual execution status.
+
+### Actionable
+
+Reports should help someone decide what to do next.
+
+### Traceable
+
+Results should connect to requirements, tests, and defects.
+
+### Concise
+
+Important information should be easy to find.
+
+### Reproducible
+
+Reports should contain enough execution context to reproduce investigations.
+
+### Risk-Aware
+
+Critical failures should be more visible than low-impact failures.
+
+---
+
+## 15.25 Metrics That Should Not Be Used Alone
+
+The following metrics must not be treated as standalone measures of quality:
+
+* Number of automated tests
+* Total number of test cases
+* Automation percentage
+* Raw number of defects
+* Pass rate without skipped/blocked context
+
+The reporting strategy should answer:
+
+> **Are we testing the right things, reliably, efficiently, and with sufficient evidence?**
+
+---
+
+## 15.26 Reporting Success Criteria
+
+Reporting is considered effective when the team can quickly determine:
+
+* What was tested?
+* What passed?
+* What failed?
+* What was skipped or blocked?
+* Which requirements are covered?
+* Which critical workflows are protected?
+* Which defects remain open?
+* Which failures require investigation?
+* Is automation stable?
+* Is CI reliable?
+* Are quality risks increasing or decreasing?
+* Is the release ready for the next decision?
+
+---
+
+## Final Reporting Principle
+
+**A test report should not merely show whether tests passed or failed. It should provide enough context, evidence, and traceability to support investigation, quality decisions, and continuous improvement.**
