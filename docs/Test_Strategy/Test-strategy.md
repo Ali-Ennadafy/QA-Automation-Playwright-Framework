@@ -4383,6 +4383,607 @@ Defect management will be considered effective when:
 
 **A defect is not simply a failed test. It is a verified deviation between expected and actual behavior that is documented, prioritized, investigated, retested, and controlled throughout its lifecycle.**
 
+# 13. Test Management
 
+The nopCommerce QA Automation Project will use a structured test management approach to plan, organize, track, control, and communicate testing activities throughout the project lifecycle.
+
+The objective is to provide clear visibility into test progress, scope, coverage, risks, execution status, defects, deliverables, and release readiness.
+
+Test management activities will ensure that testing remains aligned with requirements, business priorities, risk, and available resources.
+
+---
+
+## 13.1 Test Management Objectives
+
+The test management strategy aims to:
+
+* Define and control the testing scope.
+* Organize testing activities and deliverables.
+* Maintain visibility into test progress.
+* Track test execution status.
+* Monitor coverage and testing gaps.
+* Track risks, blockers, and dependencies.
+* Coordinate manual and automated testing activities.
+* Ensure traceability between requirements and tests.
+* Support defect triage and resolution tracking.
+* Support release and quality decisions.
+* Maintain consistent testing documentation.
+* Ensure that testing activities remain aligned with project changes.
+
+---
+
+## 13.2 Test Management Activities
+
+Test management will cover the following activities:
+
+```text id="4gh3bz"
+Planning
+   ↓
+Test Organization
+   ↓
+Test Design Tracking
+   ↓
+Test Execution Tracking
+   ↓
+Defect / Risk Monitoring
+   ↓
+Progress Monitoring
+   ↓
+Reporting
+   ↓
+Release Assessment
+```
+
+Key activities include:
+
+* Test planning
+* Scope management
+* Test estimation
+* Test scheduling
+* Resource coordination
+* Test execution monitoring
+* Risk management
+* Defect coordination
+* Coverage monitoring
+* Deliverable management
+* Test reporting
+* Release readiness assessment
+
+---
+
+## 13.3 Test Planning
+
+Testing will be planned based on:
+
+* Approved requirements
+* Test scope
+* Business priorities
+* Risk level
+* Feature dependencies
+* Environment availability
+* Test data availability
+* Automation readiness
+* Release objectives
+
+Planning should answer:
+
+* What will be tested?
+* What will not be tested?
+* Which tests have priority?
+* Which environments are required?
+* Which test data is required?
+* What automation is planned?
+* What risks may affect execution?
+* What criteria determine test completion?
+
+---
+
+## 13.4 Test Scope Management
+
+The test scope will be controlled through the approved Test Strategy and requirements baseline.
+
+Scope changes should be evaluated for their impact on:
+
+* Test scenarios
+* Test cases
+* Automation
+* Test data
+* Environment requirements
+* Regression coverage
+* Risks
+* Schedule
+* Deliverables
+
+Example:
+
+```text id="br8z9p"
+Requirement Added
+      ↓
+Scope Impact Analysis
+      ↓
+Test Scenario
+      ↓
+Test Case
+      ↓
+Automation Decision
+      ↓
+Test Data
+      ↓
+Regression Impact
+```
+
+---
+
+## 13.5 Test Estimation
+
+Testing effort should be estimated based on the complexity and risk of the work.
+
+Estimation factors may include:
+
+* Number of requirements
+* Number of test scenarios
+* Test complexity
+* Risk level
+* Automation complexity
+* API dependencies
+* Test data complexity
+* Environment complexity
+* Cross-browser requirements
+* Regression impact
+* Expected maintenance effort
+
+Estimation should not be based only on the number of test cases.
+
+---
+
+## 13.6 Test Scheduling
+
+Testing activities should be scheduled according to dependencies and priorities.
+
+A typical sequence may be:
+
+```text id="h5r6k3"
+Requirements Ready
+      ↓
+Test Analysis
+      ↓
+Test Design
+      ↓
+Test Data / Environment Preparation
+      ↓
+Manual / Exploratory Validation
+      ↓
+Automation Development
+      ↓
+Smoke
+      ↓
+Functional / API Testing
+      ↓
+Regression
+      ↓
+Cross-Browser
+      ↓
+Test Summary
+```
+
+Testing may occur iteratively rather than strictly sequentially.
+
+---
+
+## 13.7 Test Execution Management
+
+Test execution should be monitored continuously.
+
+Execution status may include:
+
+* Not Started
+* In Progress
+* Passed
+* Failed
+* Blocked
+* Skipped
+* Retest
+* Not Applicable
+
+Example:
+
+| Status         | Meaning                                        |
+| -------------- | ---------------------------------------------- |
+| Not Started    | Test has not been executed                     |
+| In Progress    | Execution is underway                          |
+| Passed         | Expected behavior verified                     |
+| Failed         | Actual behavior differs from expected behavior |
+| Blocked        | Execution cannot continue due to dependency    |
+| Skipped        | Test intentionally not executed                |
+| Retest         | Test is being executed after a fix             |
+| Not Applicable | Test does not apply to current scope           |
+
+---
+
+## 13.8 Test Progress Monitoring
+
+Testing progress should be monitored using measurable indicators.
+
+Example:
+
+| Metric        | Value |
+| ------------- | ----: |
+| Planned Tests |   120 |
+| Executed      |   100 |
+| Passed        |    88 |
+| Failed        |     8 |
+| Blocked       |     2 |
+| Skipped       |     2 |
+| Remaining     |    20 |
+
+Execution progress should always be interpreted together with risk and coverage.
+
+For example:
+
+```text id="dw0p2t"
+90% Tests Executed
+        ≠
+90% Quality Confidence
+```
+
+If the remaining 10% contains all P0 checkout tests, the project may still have significant residual risk.
+
+---
+
+## 13.9 Test Priority Management
+
+Test execution priority will follow business and technical risk.
+
+Priority should generally be:
+
+```text id="kl6m8v"
+P0 Critical
+   ↓
+P1 High
+   ↓
+P2 Medium
+   ↓
+P3 Low
+```
+
+Critical business workflows should be validated before low-risk functionality where execution order matters.
+
+---
+
+## 13.10 Test Dependencies
+
+Dependencies should be identified before execution.
+
+Potential dependencies include:
+
+* Application availability
+* Test environment
+* Test accounts
+* Product/catalog data
+* APIs
+* Payment methods
+* Shipping methods
+* External services
+* Database access
+* CI infrastructure
+
+Dependencies should be documented when they can block testing.
+
+---
+
+## 13.11 Blocked Test Management
+
+A blocked test should not be reported simply as a failed test.
+
+Examples of blocking conditions:
+
+* Application unavailable
+* Required test account unavailable
+* Missing test data
+* External dependency unavailable
+* Environment configuration failure
+* Required API unavailable
+
+Blocked tests should record:
+
+* Blocking reason
+* Affected functionality
+* Date/time
+* Dependency owner where applicable
+* Resolution status
+
+Example:
+
+```text id="g7j5u2"
+Test
+ ↓
+Blocked
+ ↓
+Reason Identified
+ ↓
+Dependency Resolved
+ ↓
+Retest
+```
+
+---
+
+## 13.12 Risk and Issue Monitoring
+
+Test management will track risks and issues that may affect testing.
+
+Examples:
+
+* Environment instability
+* Requirement ambiguity
+* High defect concentration
+* Test data problems
+* Increasing flaky tests
+* CI instability
+* External dependency limitations
+* Increasing regression execution time
+
+High-risk issues should be escalated when they threaten testing objectives or release confidence.
+
+---
+
+## 13.13 Change Management
+
+Changes to requirements, application behavior, architecture, or integrations should trigger test impact analysis.
+
+Example:
+
+```text id="z4u8b1"
+Application Change
+      ↓
+Impact Analysis
+      ↓
+Affected Requirements
+      ↓
+Affected Tests
+      ↓
+Affected Automation
+      ↓
+Affected Test Data
+      ↓
+Regression Scope Update
+```
+
+This prevents testing artifacts from becoming outdated.
+
+---
+
+## 13.14 Test Deliverable Management
+
+The project will maintain and track key testing deliverables.
+
+| ID    | Deliverable           | Purpose                           |
+| ----- | --------------------- | --------------------------------- |
+| TD-01 | Test Strategy         | Defines overall testing approach  |
+| TD-02 | Requirements Baseline | Defines testable requirements     |
+| TD-03 | RTM                   | Provides traceability             |
+| TD-04 | Test Scenarios        | Defines high-level validation     |
+| TD-05 | Test Cases            | Defines detailed validation       |
+| TD-06 | Automation Suite      | Implements approved automation    |
+| TD-07 | Test Data             | Supports execution                |
+| TD-08 | Defect Reports        | Tracks confirmed defects          |
+| TD-09 | Execution Reports     | Records test results              |
+| TD-10 | Test Summary          | Communicates final quality status |
+
+Deliverables should remain version controlled where appropriate.
+
+---
+
+## 13.15 Test Management Tools
+
+The project may use a combination of tools depending on the activity.
+
+### Test / Documentation Management
+
+* Markdown documentation
+* GitHub repository
+* RTM spreadsheet or structured document
+
+### Automation
+
+* Playwright
+* Node.js
+* JavaScript
+
+### Version Control
+
+* Git
+* GitHub
+
+### CI/CD
+
+* GitHub Actions
+
+### Defect Tracking
+
+A suitable issue-tracking mechanism may be used, such as GitHub Issues or another defect-management platform.
+
+The selected tools should support traceability rather than introduce unnecessary administrative overhead.
+
+---
+
+## 13.16 Test Review and Approval
+
+Test artifacts should be reviewed according to their risk and importance.
+
+Review may include:
+
+* Requirement review
+* Test scenario review
+* Test case review
+* Automation code review
+* Risk review
+* Regression scope review
+* Test result review
+
+Significant changes should follow the defined Review & Approval Process.
+
+---
+
+## 13.17 Test Communication
+
+Testing status should be communicated clearly to relevant stakeholders.
+
+Typical communication may include:
+
+### Daily / Frequent
+
+* Test progress
+* Major blockers
+* Critical failures
+* Newly discovered high-severity defects
+
+### Per Regression Cycle
+
+* Execution summary
+* Coverage status
+* Defects
+* Risks
+* Blocked tests
+* Automation stability
+
+### Release / Milestone
+
+* Overall test status
+* Critical workflow status
+* Open defects
+* Residual risks
+* Quality recommendation
+
+---
+
+## 13.18 Test Status Reporting
+
+A test status report should answer:
+
+* What has been tested?
+* What remains?
+* What has failed?
+* What is blocked?
+* Which critical areas are covered?
+* Which risks remain?
+* Are there unresolved critical defects?
+* Is additional testing required?
+
+Example:
+
+```text id="f2q7q9"
+Test Progress
+      ↓
+Coverage
+      ↓
+Defects
+      ↓
+Risks
+      ↓
+Blockers
+      ↓
+Quality Status
+```
+
+---
+
+## 13.19 Release Readiness Management
+
+Test management contributes to release readiness assessment.
+
+The decision should consider:
+
+* Required coverage achieved
+* Critical workflows validated
+* Critical/High defects status
+* Regression results
+* Environment stability
+* Automation stability
+* Remaining risks
+* Known limitations
+* Business acceptance where required
+
+The QA team provides evidence and recommendation; final release authority may remain with the appropriate business/engineering stakeholders.
+
+---
+
+## 13.20 Test Completion
+
+Testing completion should be evaluated against the defined Exit Criteria.
+
+The completion review should verify:
+
+* Planned testing performed
+* Critical workflows validated
+* Required coverage achieved
+* Relevant defects resolved/accepted
+* Regression completed
+* Evidence available
+* Metrics collected
+* Residual risks documented
+* Test summary completed
+
+---
+
+## 13.21 Test Management Metrics
+
+Test management may monitor:
+
+* Test execution progress
+* Planned vs executed tests
+* Pass/fail rate
+* Blocked tests
+* Test completion percentage
+* Requirement coverage
+* Critical workflow coverage
+* Defect status
+* Test execution duration
+* Flaky test rate
+* Automation stability
+* Regression completion
+
+Detailed metrics definitions are maintained in the **Test Metrics** section.
+
+---
+
+## 13.22 Test Management Governance
+
+Testing activities should follow controlled processes for:
+
+* Scope changes
+* Requirement changes
+* Test changes
+* Automation changes
+* CI/CD changes
+* Defect prioritization
+* Risk reassessment
+* Release decisions
+
+Important project artifacts should remain version controlled.
+
+---
+
+## 13.23 Test Management Success Criteria
+
+Test management will be considered effective when:
+
+* Testing scope is clearly defined.
+* Priorities are understood.
+* Progress is measurable.
+* Blockers are visible and controlled.
+* Requirements and tests remain traceable.
+* Test deliverables are maintained.
+* Risks are continuously monitored.
+* Defects are tracked through resolution.
+* Stakeholders receive clear quality information.
+* Release decisions are supported by evidence.
+* Testing remains aligned with changing project requirements.
+
+---
+
+## Final Principle
+
+**Test management is not simply tracking how many tests passed. It is the continuous control of testing scope, progress, risks, dependencies, coverage, defects, and quality decisions to ensure that the right testing is performed at the right time with sufficient evidence.**
 
 
