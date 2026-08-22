@@ -3805,3 +3805,584 @@ The coverage strategy will be considered effective when:
 **Browser and device coverage should be driven by business risk, user impact, and compatibility value rather than by attempting to test every possible environment. Critical workflows receive broad coverage, while lower-risk functionality receives proportionally lighter coverage.**
 
 
+# 12. Defect Management
+
+The nopCommerce QA Automation Framework will follow a structured defect management process to ensure that defects are consistently identified, documented, analyzed, prioritized, tracked, retested, and closed.
+
+The objective is to provide clear visibility into application quality, defect impact, defect status, and the relationship between defects, requirements, test cases, and automated test execution.
+
+---
+
+## 12.1 Defect Management Objectives
+
+The defect management strategy aims to:
+
+* Ensure defects are identified and documented consistently.
+* Provide clear and reproducible defect reports.
+* Classify defects according to severity and priority.
+* Link defects to requirements, test scenarios, and test cases where applicable.
+* Distinguish application defects from test, data, and environment failures.
+* Ensure fixed defects are properly retested.
+* Protect against regression caused by defect fixes.
+* Maintain traceability throughout the defect lifecycle.
+* Provide actionable evidence to support investigation.
+* Identify recurring defect patterns and quality risks.
+
+---
+
+## 12.2 Defect Lifecycle
+
+A defect will follow a defined lifecycle from discovery to closure.
+
+```text id="zbc2b7"
+New
+ ↓
+Triaged
+ ↓
+Assigned
+ ↓
+In Progress
+ ↓
+Fixed
+ ↓
+Ready for Retest
+ ↓
+Retest
+ ├── Passed → Closed
+ └── Failed → Reopened
+```
+
+Additional states may be used when required:
+
+```text id="p1s98h"
+Rejected
+Duplicate
+Deferred
+Blocked
+Cannot Reproduce
+Not a Bug
+Won't Fix
+```
+
+The exact workflow may depend on the selected defect management tool.
+
+---
+
+## 12.3 Defect Detection Sources
+
+Defects may be identified through:
+
+* Manual functional testing
+* Exploratory testing
+* Playwright automation
+* API automation
+* Integration testing
+* Regression testing
+* Smoke testing
+* Sanity testing
+* Accessibility testing
+* Security-related functional checks
+* Compatibility testing
+* Performance testing
+* CI/CD execution
+* Previous defect regression
+* Requirement analysis
+
+---
+
+## 12.4 Defect Identification
+
+Each confirmed defect should receive a unique identifier.
+
+Example:
+
+```text id="j9j8j6"
+BUG-AUTH-001
+BUG-CART-001
+BUG-CHECKOUT-001
+BUG-ORDER-001
+```
+
+The identifier should remain stable throughout the defect lifecycle.
+
+---
+
+## 12.5 Defect Report Requirements
+
+A defect report should contain sufficient information to reproduce and investigate the issue.
+
+Required information should include:
+
+### Basic Information
+
+* Defect ID
+* Short title
+* Date reported
+* Reporter
+* Affected feature
+* Environment
+* Browser
+* Application version/build where available
+
+### Reproduction Information
+
+* Preconditions
+* Test data
+* Steps to reproduce
+* Expected result
+* Actual result
+
+### Impact Information
+
+* Severity
+* Priority
+* Frequency/reproducibility
+* Affected users or workflow
+* Business impact
+
+### Evidence
+
+Where applicable:
+
+* Screenshot
+* Video
+* Playwright trace
+* Console logs
+* Network information
+* API request/response
+* Relevant test output
+* CI execution link or artifact
+
+---
+
+## 12.6 Defect Title Standards
+
+Defect titles should be concise, descriptive, and action-oriented.
+
+Preferred format:
+
+```text
+[Area] - [Observed Problem] - [Condition]
+```
+
+Example:
+
+```text
+[Checkout] - Order cannot be placed when a valid shipping address is selected
+```
+
+Avoid vague titles such as:
+
+```text
+Checkout broken
+Problem with order
+It doesn't work
+```
+
+---
+
+## 12.7 Severity Classification
+
+Severity represents the **impact of the defect on the system or user**.
+
+| Severity | Definition                                                          | Example                                       |
+| -------- | ------------------------------------------------------------------- | --------------------------------------------- |
+| Critical | Prevents a core business function or causes severe system impact    | Customer cannot place any order               |
+| High     | Major functionality is broken with significant business/user impact | Checkout fails for a major supported scenario |
+| Medium   | Important functionality is affected but a workaround exists         | Product filtering returns incorrect results   |
+| Low      | Minor functional or cosmetic impact                                 | Minor non-critical UI validation issue        |
+
+Severity should reflect the technical and business consequences of the defect.
+
+---
+
+## 12.8 Priority Classification
+
+Priority represents **how urgently the defect should be addressed**.
+
+| Priority | Definition                             |
+| -------- | -------------------------------------- |
+| P0       | Immediate attention required           |
+| P1       | High priority; should be fixed quickly |
+| P2       | Normal priority                        |
+| P3       | Low priority; may be scheduled later   |
+
+Severity and priority are related but not identical.
+
+Example:
+
+```text id="m2d93p"
+High Severity + P1
+```
+
+may require urgent resolution.
+
+A:
+
+```text id="g8ujm0"
+Low Severity + P3
+```
+
+may be deferred.
+
+Business context can cause priority to differ from severity.
+
+---
+
+## 12.9 Defect Classification
+
+Defects may be classified by category to support analysis.
+
+Possible categories include:
+
+* Functional
+* UI / Visual
+* API
+* Data
+* Integration
+* Security
+* Compatibility
+* Accessibility
+* Performance
+* Configuration
+* Environment-related
+* Regression
+
+Classification helps identify recurring quality problems and areas requiring additional test coverage.
+
+---
+
+## 12.10 Defect Triage
+
+Defect triage will determine:
+
+* Whether the issue is a valid defect.
+* Severity.
+* Priority.
+* Ownership.
+* Reproduction status.
+* Affected requirements.
+* Required regression coverage.
+
+A simplified triage process:
+
+```text id="e3v4r2"
+Reported
+   ↓
+Reproduce
+   ↓
+Valid Defect?
+ ├── No → Reject / Cannot Reproduce / Not a Bug
+ └── Yes
+      ↓
+Severity
+      ↓
+Priority
+      ↓
+Assignment
+```
+
+For this portfolio project, the QA strategy will document the triage decision even when a real multi-person team is not available.
+
+---
+
+## 12.11 Distinguishing Defects from Test Failures
+
+A failed automated test is not automatically an application defect.
+
+Every failure should first be investigated.
+
+```text id="y7m9x1"
+Test Failure
+     ↓
+Environment Issue?
+     ↓
+Test Data Issue?
+     ↓
+Automation / Framework Issue?
+     ↓
+Application Defect?
+```
+
+Potential non-product causes include:
+
+* Broken selector
+* Incorrect assertion
+* Stale test data
+* Expired credentials
+* Environment outage
+* Network instability
+* Browser issue
+* Timing/synchronization issue
+* Flaky automation
+
+Only confirmed application behavior should be reported as a product defect.
+
+---
+
+## 12.12 Defect Reproduction
+
+A defect should be reproducible whenever technically possible.
+
+Reproduction should use:
+
+* Known environment
+* Known browser
+* Known test data
+* Defined preconditions
+* Clear reproduction steps
+
+If a defect cannot be reproduced, the report should clearly document:
+
+* Where it occurred
+* How it was initially observed
+* Evidence collected
+* Attempts made to reproduce it
+
+---
+
+## 12.13 Defect Traceability
+
+Defects should be linked to relevant testing artifacts.
+
+Example:
+
+```text id="f2bx8f"
+Requirement
+    ↓
+Test Scenario
+    ↓
+Test Case
+    ↓
+Automated Test
+    ↓
+Failure
+    ↓
+Defect
+```
+
+Example:
+
+```text id="r14f5f"
+REQ-CHECKOUT-001
+        ↓
+TC-CHECKOUT-005
+        ↓
+checkout.spec.js
+        ↓
+CI Failure
+        ↓
+BUG-CHK-001
+```
+
+This provides visibility between business requirements, test execution, and defects.
+
+---
+
+## 12.14 Defect Retesting
+
+When a defect is fixed, the affected test should be executed again.
+
+Retesting should verify:
+
+* The original defect is resolved.
+* Expected behavior is restored.
+* No immediate related issues remain.
+
+A defect should not be considered closed simply because a developer reports that it has been fixed.
+
+---
+
+## 12.15 Regression After Defect Fix
+
+Defect fixes may introduce regressions.
+
+Therefore, after successful retesting, related regression tests should be executed where appropriate.
+
+Example:
+
+```text id="q4n2bm"
+Checkout Defect Fixed
+       ↓
+Retest Checkout
+       ↓
+Regression
+   ├── Cart
+   ├── Checkout
+   ├── Order
+   └── Payment Boundary
+```
+
+Regression depth should be based on defect risk and the scope of the change.
+
+---
+
+## 12.16 Defect Closure Criteria
+
+A defect may be closed when:
+
+* The defect has been successfully retested.
+* Expected behavior is confirmed.
+* Required regression checks have passed.
+* Evidence is available where appropriate.
+* No unresolved blocking issue remains.
+* The defect status is updated correctly.
+
+---
+
+## 12.17 Reopened Defects
+
+A defect should be reopened when:
+
+* The original problem still occurs.
+* The fix only partially resolves the issue.
+* The same defect reappears.
+* A related implementation change causes the issue to return.
+
+Example:
+
+```text id="0iuk5u"
+Fixed
+ ↓
+Retest
+ ↓
+Failed
+ ↓
+Reopened
+```
+
+Reopened defects should retain their previous history and evidence.
+
+---
+
+## 12.18 Duplicate and Invalid Defects
+
+### Duplicate
+
+If the same issue has already been reported, the new defect should reference the original defect.
+
+### Rejected / Not a Bug
+
+An issue may be rejected when:
+
+* The behavior matches the approved requirement.
+* The expected result was incorrect.
+* The issue is caused by invalid test data.
+* The issue is environmental.
+* The issue is expected application behavior.
+
+The reason for rejection should be documented.
+
+---
+
+## 12.19 Regression Defect Strategy
+
+Defects that were previously fixed and are considered important should become regression candidates.
+
+Example:
+
+```text id="l1apuk"
+BUG-CART-003
+      ↓
+Fixed
+      ↓
+Retested
+      ↓
+Regression Test Created
+      ↓
+Future Regression Suite
+```
+
+This prevents recurring defects from returning unnoticed.
+
+---
+
+## 12.20 Automation Integration
+
+Where a defect is deterministic and suitable for automation, the corresponding regression test should be added or updated.
+
+Example:
+
+```text id="8t0q8w"
+Manual Defect Found
+       ↓
+Root Cause / Expected Behavior Defined
+       ↓
+Automated Regression Test
+       ↓
+CI Execution
+```
+
+Not every defect needs to be automated immediately.
+
+Automation priority should depend on:
+
+* Risk
+* Repeatability
+* Regression probability
+* Stability
+* Automation ROI
+
+---
+
+## 12.21 Defect Metrics
+
+Defect information may be used to calculate useful quality indicators such as:
+
+* Total defects
+* Open defects
+* Closed defects
+* Reopened defects
+* Defects by severity
+* Defects by priority
+* Defects by feature
+* Defects by test type
+* Defect rejection rate
+* Defect aging
+* Regression defect count
+* Defect density where meaningful
+
+These metrics will be covered in more detail in the **Test Metrics** section.
+
+---
+
+## 12.22 Defect Reporting
+
+Defect reports should provide enough information for another team member to understand the issue without requiring a separate explanation.
+
+A high-quality report should answer:
+
+* What is wrong?
+* Where does it happen?
+* How can it be reproduced?
+* What was expected?
+* What actually happened?
+* Who or what is affected?
+* How severe is the issue?
+* How urgent is it?
+* What evidence supports the finding?
+
+---
+
+## 12.23 Defect Management Success Criteria
+
+Defect management will be considered effective when:
+
+* Defects are reproducible or supported by sufficient evidence.
+* Severity and priority are consistently assigned.
+* Defects can be traced to relevant requirements and tests.
+* Confirmed fixes are retested.
+* Appropriate regression testing follows significant fixes.
+* Important defects are converted into regression protection where valuable.
+* False defects caused by test data, environment, or automation issues are minimized.
+* Defect status accurately reflects the current state.
+
+---
+
+## Final Principle
+
+**A defect is not simply a failed test. It is a verified deviation between expected and actual behavior that is documented, prioritized, investigated, retested, and controlled throughout its lifecycle.**
+
+
+
+
