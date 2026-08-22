@@ -4987,3 +4987,708 @@ Test management will be considered effective when:
 **Test management is not simply tracking how many tests passed. It is the continuous control of testing scope, progress, risks, dependencies, coverage, defects, and quality decisions to ensure that the right testing is performed at the right time with sufficient evidence.**
 
 
+# 14. CI/CD Strategy
+
+The nopCommerce QA Automation Framework will integrate automated testing into the software delivery lifecycle through a controlled CI/CD strategy.
+
+The objective is to provide fast, reliable, repeatable, and actionable quality feedback while preventing known automation or application failures from progressing through the delivery pipeline.
+
+The CI/CD strategy will support:
+
+* Automated test execution after relevant code changes.
+* Early regression detection.
+* Fast feedback for developers and QA engineers.
+* Reproducible test execution.
+* Automated quality gates.
+* Test reporting and failure evidence.
+* Controlled regression execution before releases.
+* Browser and API validation where applicable.
+* Continuous monitoring of automation stability.
+
+---
+
+## 14.1 CI/CD Objectives
+
+The CI/CD strategy aims to:
+
+* Run critical automated tests automatically.
+* Detect regressions as early as possible.
+* Reduce manual regression effort.
+* Prevent critical failures from progressing unnoticed.
+* Provide fast feedback during development.
+* Maintain consistent execution environments.
+* Store reports and failure evidence.
+* Support smoke, regression, API, and cross-browser execution.
+* Track flaky and unstable automation.
+* Provide sufficient information for failure investigation.
+
+---
+
+## 14.2 CI/CD Pipeline
+
+The initial pipeline will follow this high-level flow:
+
+```text id="t9j4p1"
+Code Change
+     ↓
+Pull Request
+     ↓
+Environment Preparation
+     ↓
+Dependency Installation
+     ↓
+Configuration Validation
+     ↓
+Environment Health Check
+     ↓
+Smoke Tests
+     ↓
+API Tests
+     ↓
+UI Regression
+     ↓
+Cross-Browser Validation
+     ↓
+Reports & Artifacts
+     ↓
+Quality Gate
+     ↓
+Merge / Release Decision
+```
+
+The exact stages may vary depending on the execution context.
+
+---
+
+## 14.3 Pipeline Trigger Strategy
+
+Automated tests will be triggered according to development and release activities.
+
+### Pull Request
+
+Pull requests will execute a lightweight validation suite designed for fast feedback.
+
+Typical execution:
+
+```text id="h3x2r7"
+Pull Request
+    ↓
+Install
+    ↓
+Configuration Check
+    ↓
+Environment Check
+    ↓
+Smoke Tests
+    ↓
+Critical API Tests
+    ↓
+Critical UI Tests
+    ↓
+Report
+```
+
+The objective is to identify critical problems before code is merged.
+
+---
+
+### Main Branch
+
+A broader regression suite will execute after changes are merged into the main branch.
+
+Typical execution:
+
+```text id="e6s9z4"
+Main Branch
+    ↓
+API Regression
+    ↓
+UI Regression
+    ↓
+Selected Cross-Browser Tests
+    ↓
+Report
+```
+
+---
+
+### Scheduled Execution
+
+Scheduled execution will be used for broader regression and compatibility validation.
+
+Typical execution:
+
+```text id="f2m5r8"
+Scheduled Run
+     ↓
+Full Regression
+     ↓
+Chromium
+Firefox
+WebKit
+     ↓
+Reports
+```
+
+Scheduled execution is particularly useful for detecting issues that are not exposed by individual pull requests.
+
+---
+
+## 14.4 Pipeline Stages
+
+### Stage 1 — Checkout
+
+The CI runner retrieves the latest project source code.
+
+```text id="6k8s2m"
+Repository
+   ↓
+CI Runner
+```
+
+---
+
+### Stage 2 — Environment Setup
+
+The pipeline will:
+
+* Configure the required Node.js version.
+* Prepare environment variables.
+* Install project dependencies.
+* Install required Playwright browsers.
+* Load required configuration.
+
+---
+
+### Stage 3 — Dependency Installation
+
+Dependencies will be installed using the project package manager.
+
+The repository lock file should be used where applicable to improve reproducibility.
+
+---
+
+### Stage 4 — Configuration Validation
+
+Before test execution, the pipeline will validate:
+
+* Required environment variables.
+* Base URL configuration.
+* Browser configuration.
+* Test configuration.
+* Required credentials or secrets.
+* Playwright configuration.
+
+---
+
+### Stage 5 — Environment Health Check
+
+Before executing expensive test suites, the pipeline may validate:
+
+* Application availability.
+* Base URL reachability.
+* Required authentication availability.
+* Required test data availability.
+* Basic application navigation.
+
+Example:
+
+```text id="q4z1l8"
+Environment Check
+      ↓
+Application Available?
+      ↓
+Configuration Valid?
+      ↓
+Test Environment Ready
+```
+
+If a mandatory health check fails, dependent tests may be marked as blocked instead of incorrectly reported as application failures.
+
+---
+
+### Stage 6 — Smoke Tests
+
+Critical tests will execute first.
+
+Example:
+
+```text id="h7q5s3"
+Application Available
+        ↓
+Login
+        ↓
+Product Search
+        ↓
+Product Details
+        ↓
+Add to Cart
+        ↓
+Checkout
+```
+
+Smoke tests should execute quickly and provide early feedback on the health of the application.
+
+If critical smoke tests fail, the pipeline may stop subsequent expensive stages according to the defined pipeline policy.
+
+---
+
+### Stage 7 — API Testing
+
+Where API coverage is available, API tests will execute independently from the UI suite.
+
+Coverage may include:
+
+* HTTP status codes
+* Response structure
+* Required fields
+* Business rules
+* Authentication and authorization
+* Negative scenarios
+* Schema validation
+* Error handling
+* Data consistency
+
+API tests may execute before UI regression because they generally provide faster feedback.
+
+---
+
+### Stage 8 — UI Regression
+
+Playwright UI regression tests will execute against the configured environment.
+
+Initial priority will include:
+
+* Registration
+* Login
+* Product discovery
+* Product details
+* Search and filtering
+* Shopping cart
+* Checkout
+* Order placement
+* Order confirmation
+* Customer account
+* Order history
+* Critical administration workflows
+
+---
+
+## 14.5 Browser Execution Strategy
+
+The pipeline will support:
+
+| Browser  | Purpose                  |
+| -------- | ------------------------ |
+| Chromium | Primary CI execution     |
+| Firefox  | Cross-browser validation |
+| WebKit   | Cross-browser validation |
+
+The execution strategy will be risk-based.
+
+### Pull Request
+
+```text id="9w4p2j"
+Chromium
+↓
+Smoke / Critical Tests
+```
+
+### Main Branch
+
+```text id="p3d7k1"
+Chromium
+↓
+Regression
+```
+
+### Scheduled / Release Validation
+
+```text id="a6q8m2"
+Chromium
++
+Firefox
++
+WebKit
+```
+
+This approach balances feedback speed with broader compatibility coverage.
+
+---
+
+## 14.6 Parallel Execution
+
+Independent tests should execute in parallel where technically safe.
+
+Example:
+
+```text id="u3f8c6"
+                  ┌── Authentication
+                  │
+Regression ───────┼── Product
+                  │
+                  ├── Cart
+                  │
+                  └── Account
+```
+
+Parallel execution should be introduced only when tests are properly isolated.
+
+The framework must avoid:
+
+* Shared mutable data.
+* Test-order dependencies.
+* Shared authentication state that can be modified unexpectedly.
+* Resource conflicts.
+
+The objective is to reduce total execution time without reducing reliability.
+
+---
+
+## 14.7 Quality Gates
+
+Quality gates will determine whether the pipeline can progress.
+
+### Pull Request Quality Gate
+
+Minimum expectations:
+
+* Configuration succeeds.
+* Environment is available.
+* Smoke tests pass.
+* Critical automated tests pass.
+* No unexplained failures remain.
+* Required reports are generated.
+
+### Release Quality Gate
+
+Before release approval:
+
+* Required critical regression tests pass.
+* Required API tests pass.
+* Required browser coverage is completed.
+* No unresolved blocking defects remain.
+* Automation failures are classified.
+* Test results and evidence are available.
+* Known risks are documented and accepted where applicable.
+
+Example:
+
+```text id="g6s2v9"
+Tests
+  ↓
+PASS
+  ↓
+Quality Gate
+  ↓
+Continue
+```
+
+or:
+
+```text id="k8m3r1"
+Tests
+  ↓
+FAIL
+  ↓
+Failure Analysis
+  ↓
+Fix / Accept Risk / Block
+```
+
+---
+
+## 14.8 Failure Classification
+
+A pipeline failure must be investigated before being classified as an application defect.
+
+The investigation flow is:
+
+```text id="d7p4n2"
+Pipeline Failure
+      ↓
+Infrastructure Issue?
+      ↓
+Dependency Issue?
+      ↓
+Environment Issue?
+      ↓
+Test Data Issue?
+      ↓
+Automation / Framework Issue?
+      ↓
+Application Defect?
+```
+
+This prevents false defect reporting caused by CI infrastructure, environment instability, or automation problems.
+
+---
+
+## 14.9 Failure Evidence
+
+Failed automated tests should retain sufficient evidence for investigation.
+
+Evidence may include:
+
+* Playwright HTML report
+* Screenshots
+* Trace files
+* Videos where configured
+* Console logs
+* Network information
+* Error messages
+* Test output
+* Environment information
+* Browser information
+* CI execution details
+
+Example:
+
+```text id="s8k5r2"
+Failed Test
+    ↓
+Screenshot
+    +
+Trace
+    +
+Logs
+    +
+Report
+```
+
+This allows engineers to analyze failures without immediately reproducing them locally.
+
+---
+
+## 14.10 Artifact Management
+
+CI artifacts should be associated with the specific pipeline execution.
+
+Potential artifacts include:
+
+* HTML reports
+* Screenshots
+* Playwright traces
+* Videos
+* Logs
+* JUnit or other machine-readable test results
+* Failure metadata
+
+Artifact retention should follow the project's storage and retention policy.
+
+---
+
+## 14.11 Environment Management
+
+The same test logic should be reusable across supported environments.
+
+Environment-specific configuration should be externalized.
+
+Examples:
+
+```text id="w2n6p9"
+BASE_URL
+API_BASE_URL
+TEST_USERNAME
+TEST_PASSWORD
+ENVIRONMENT
+BROWSER
+HEADLESS
+```
+
+Potential environments include:
+
+```text id="r6t8v2"
+Local
+    ↓
+QA / Test
+    ↓
+Staging
+```
+
+The project should avoid modifying test implementation when switching environments.
+
+---
+
+## 14.12 Secrets Management
+
+Sensitive information must never be hard-coded in source code.
+
+Examples:
+
+* Passwords
+* API tokens
+* Authentication secrets
+* Service credentials
+
+Preferred mechanisms:
+
+* CI/CD secrets
+* Environment variables
+* Secure configuration systems
+
+Rules:
+
+```text id="x8n5q4"
+❌ Passwords in Git
+❌ API tokens in test files
+❌ Production credentials in repository
+
+✅ CI/CD Secrets
+✅ Environment Variables
+✅ Secure Configuration
+```
+
+---
+
+## 14.13 Retry Policy
+
+Retries may be used selectively to handle transient infrastructure or environmental failures.
+
+However:
+
+**Retries must never be used to hide flaky automation or genuine application defects.**
+
+When a test continues to fail after retry, the failure must be investigated.
+
+Retries should therefore be considered a resilience mechanism, not a substitute for root-cause analysis.
+
+---
+
+## 14.14 Flaky Test Management
+
+The CI process should identify tests that:
+
+* Pass locally but fail in CI.
+* Fail intermittently.
+* Require repeated retries.
+* Fail only in one browser.
+* Fail only in one environment.
+* Produce inconsistent results without application changes.
+
+A flaky test should follow:
+
+```text id="z1r5m7"
+Detected
+   ↓
+Investigated
+   ↓
+Root Cause Identified
+   ↓
+Fixed
+   ↓
+Re-executed
+   ↓
+Stable
+   ↓
+Returned to Critical / Regression Suite
+```
+
+Flaky tests must be tracked explicitly rather than silently ignored.
+
+A test may be temporarily excluded from a critical quality gate only when:
+
+* The exclusion is documented.
+* The reason is known.
+* The risk is understood.
+* An owner is identified.
+* A remediation plan exists.
+
+---
+
+## 14.15 CI Test Selection
+
+The pipeline should support targeted execution to optimize feedback speed.
+
+Examples:
+
+```text id="r7m2c4"
+Smoke
+Regression
+API
+UI
+Critical
+P0
+P1
+Browser-specific
+Feature-specific
+```
+
+Examples:
+
+```text id="q6v8k3"
+Pull Request
+→ Smoke + Critical
+
+Main Branch
+→ Regression
+
+Scheduled
+→ Full Regression + Cross-Browser
+```
+
+Test selection should be based on risk, execution cost, and development context.
+
+---
+
+## 14.16 CI/CD Monitoring
+
+The automation pipeline should be monitored for:
+
+* Test execution duration
+* Failure rate
+* Flaky test rate
+* Retry frequency
+* Pipeline success rate
+* Browser-specific failures
+* Environment-related failures
+* Test suite growth
+* Artifact generation failures
+
+Unusual changes in these metrics should trigger investigation.
+
+---
+
+## 14.17 CI/CD Maintenance
+
+CI/CD configuration must be maintained alongside the automation framework.
+
+Maintenance activities include:
+
+* Updating Node.js versions.
+* Updating Playwright versions.
+* Updating browser dependencies.
+* Updating GitHub Actions workflows.
+* Updating environment variables.
+* Reviewing secrets.
+* Updating test selection.
+* Optimizing execution time.
+* Reviewing failed and flaky tests.
+* Removing obsolete pipeline steps.
+
+---
+
+## 14.18 CI/CD Success Criteria
+
+The CI/CD strategy will be considered effective when:
+
+* Automated tests execute reliably after relevant code changes.
+* Critical regressions are detected early.
+* Pipeline execution is reproducible.
+* Quality gates prevent unexplained critical failures from progressing.
+* Failures provide sufficient diagnostic evidence.
+* Environment and infrastructure failures can be distinguished from application defects.
+* Flaky tests are identified and tracked.
+* Execution time remains manageable as the suite grows.
+* Reports and artifacts are available after execution.
+* The pipeline supports local and CI consistency.
+
+---
+
+## 14.19 Final CI/CD Principle
+
+**CI/CD should provide fast and trustworthy quality feedback, not simply execute tests automatically.**
+
+The pipeline must prioritize:
+
+**Fast Feedback + Reliable Execution + Clear Failure Classification + Evidence + Quality Gates + Continuous Improvement.**
