@@ -7026,684 +7026,117 @@ and use those measurements to continuously improve the quality of the applicatio
 
 # 17. Performance Strategy
 
-The nopCommerce QA Automation Project will define a dedicated performance testing strategy to evaluate application responsiveness, scalability, stability, and behavior under realistic workloads.
+Performance testing is recognized as an important quality activity for the nopCommerce application, but it is not a primary responsibility of the current Playwright functional automation framework.
 
-Performance testing will be treated as a separate testing capability from functional UI automation. Playwright will validate functional browser behavior, while dedicated performance-testing tools will generate controlled workloads and measure system performance.
-
-The initial performance-testing tool will be **k6**.
-
-The objective is not simply to determine whether the application is "fast", but to identify performance characteristics, establish measurable expectations, detect degradation, and identify potential bottlenecks.
+The current project will define the performance-testing scope and boundaries at a high level. Detailed performance implementation will be handled in a separate dedicated Performance Testing project.
 
 ---
 
-## 17.1 Performance Testing Objectives
+## 17.1 Objective
 
-The performance strategy aims to:
+The objective is to:
 
-* Validate application responsiveness under expected workloads.
-* Establish measurable performance baselines.
-* Identify performance degradation.
-* Validate critical API response behavior.
-* Evaluate system behavior under increasing load.
-* Identify bottlenecks and performance-sensitive areas.
-* Validate stability during sustained execution.
-* Evaluate system recovery after temporary load increases.
-* Provide evidence for performance-related engineering decisions.
-* Integrate appropriate performance checks into CI/CD where practical.
+* Identify performance testing as a required quality activity.
+* Define the boundary between functional automation and performance testing.
+* Identify the main areas that should be evaluated later.
+* Ensure critical performance risks are not ignored.
+* Prepare the application and test strategy for a future dedicated performance phase.
 
 ---
 
 ## 17.2 Performance Testing Scope
 
-Initial performance coverage will focus on business-critical and technically important workflows.
+The future performance project may evaluate:
 
-### Customer Workflows
-
-* Homepage access
-* Product browsing
+* Critical APIs
 * Product search
-* Product details
-* Cart operations
-* Checkout-related operations
-
-### API / Backend Workloads
-
-Where APIs are available and suitable:
-
-* Authentication
 * Product retrieval
-* Search
-* Cart operations
+* Authentication
+* Shopping cart operations
+* Checkout-related operations
 * Order-related operations
-* Other high-frequency endpoints
+* Other high-traffic or business-critical workflows
 
-### Administration
-
-Selected high-value administrative operations may be evaluated where performance impact is relevant.
+The exact scope will be determined during the dedicated Performance Testing phase.
 
 ---
 
 ## 17.3 Performance Test Types
 
-The strategy will cover multiple performance test types.
+The future performance project may include:
 
-### Load Testing
+* Load Testing
+* Stress Testing
+* Spike Testing
+* Soak / Endurance Testing
+* Capacity Testing
 
-Evaluates system behavior under expected or anticipated user load.
-
-Objective:
-
-> Does the system remain within acceptable performance thresholds under normal expected traffic?
-
----
-
-### Stress Testing
-
-Gradually increases load beyond expected levels.
-
-Objective:
-
-> At what point does performance degrade significantly or the system become unstable?
+These activities will not be implemented as part of the current Playwright functional framework.
 
 ---
 
-### Spike Testing
+## 17.4 Performance Tooling
 
-Introduces a sudden increase or decrease in load.
+The dedicated Performance Testing project will primarily use:
 
-Example:
+**k6**
 
-```text
-100 users
-   ↓
-500 users
-   ↓
-1000 users
-```
-
-Objective:
-
-> Can the system handle sudden changes in demand without unacceptable failure or recovery behavior?
+Other performance tools may be considered if project requirements justify their use.
 
 ---
 
-### Soak / Endurance Testing
+## 17.5 Performance Metrics
 
-Runs a sustained workload for an extended period.
+The future performance project will evaluate metrics such as:
 
-Objective:
-
-> Does performance remain stable over time?
-
-Potential issues include:
-
-* Memory leaks
-* Resource exhaustion
-* Connection exhaustion
-* Gradual response-time degradation
-
----
-
-### Capacity Testing
-
-Determines the maximum workload the system can support while remaining within defined performance criteria.
-
-Objective:
-
-> What is the practical capacity of the system under defined conditions?
-
----
-
-## 17.4 Performance Test Levels
-
-Performance testing may be performed at different application layers.
-
-### API / Service Level
-
-Primary performance layer.
-
-Examples:
-
-```text
-Authentication API
-Product API
-Search API
-Cart API
-Order API
-```
-
-API-level performance tests are preferred when they provide a representative measure of backend capacity.
-
----
-
-### End-to-End / Browser-Level Performance
-
-Browser-level performance validation may be used selectively.
-
-Playwright may support limited browser-side measurements, but it is not the primary load-generation mechanism.
-
-The project will avoid generating high-concurrency load through Playwright browser instances.
-
----
-
-## 17.5 Workload Model
-
-Performance testing will use workload models based on realistic user behavior rather than arbitrary request counts.
-
-Example:
-
-```text
-100 Virtual Users
-
-Homepage        → 10%
-Product Search  → 20%
-Product Details → 25%
-Cart            → 20%
-Checkout        → 15%
-Other           → 10%
-```
-
-The exact workload distribution will be defined from the application's expected usage patterns where realistic information is available.
-
-For a portfolio project, workload assumptions will be explicitly documented.
-
----
-
-## 17.6 Virtual Users and Load Profile
-
-The performance strategy will define:
-
-* Number of virtual users
-* Ramp-up period
-* Steady-state duration
-* Ramp-down period
-* Request frequency
-* Distribution between workflows
-
-Example:
-
-```text
-Start
-  ↓
-Ramp-up
-  ↓
-Steady Load
-  ↓
-Peak Load
-  ↓
-Ramp-down
-  ↓
-Recovery Observation
-```
-
----
-
-## 17.7 Baseline Performance
-
-Before larger performance experiments, baseline measurements should be established.
-
-Baseline measurements may include:
-
-* Average response time
-* p50
-* p95
-* p99
+* Response time
+* p95 / p99
 * Throughput
 * Error rate
+* Concurrent users
+* Resource utilization where available
 
-Example:
-
-| Metric                |  Baseline |
-| --------------------- | --------: |
-| Average Response Time |    250 ms |
-| p95                   |    500 ms |
-| p99                   |    900 ms |
-| Error Rate            |      0.2% |
-| Throughput            | 100 req/s |
-
-These numbers are illustrative and must be replaced by actual measurements.
+Specific thresholds and workload models will be defined during the dedicated Performance Testing phase.
 
 ---
 
-## 17.8 Performance Metrics
+## 17.6 Environment Boundary
 
-The project will monitor:
+Performance testing should preferably use a controlled and dedicated environment.
 
-### Response Time
+The public nopCommerce demo environment will not be treated as a reliable production-scale performance environment because its infrastructure and resource conditions are outside the project's control.
 
-Measures how long a request takes to receive a response.
-
-### Percentiles
-
-Particularly:
-
-* p50
-* p95
-* p99
-
-Percentiles provide better visibility into slower requests than averages alone.
-
-### Throughput
-
-Measures how much traffic the system handles over time.
-
-Examples:
-
-* Requests per second
-* Transactions per second
-
-### Error Rate
-
-Measures failed requests or business transactions.
-
-```text
-Error Rate =
-Failed Requests
-─────────────── × 100
-Total Requests
-```
-
-### Concurrent Users
-
-Measures active virtual users during the workload.
-
-### Resource Utilization
-
-Where infrastructure visibility is available:
-
-* CPU
-* Memory
-* Disk
-* Network
-* Database resources
+The detailed performance environment strategy will therefore be defined separately.
 
 ---
 
-## 17.9 Performance Thresholds
+## 17.7 CI/CD Integration
 
-Performance tests should define measurable thresholds before execution where possible.
+Performance testing will initially remain separate from the main Playwright CI regression pipeline.
 
-Example:
+Future integration may include:
 
-```text
-p95 response time < 1000 ms
-Error rate < 1%
-```
+* Lightweight performance checks
+* Scheduled performance tests
+* Performance regression validation
 
-Thresholds must be based on:
-
-* Business requirements
-* Existing baselines
-* Engineering expectations
-* Service-level objectives where available
-
-Arbitrary thresholds should not be presented as production requirements.
+Detailed CI integration will be defined in the dedicated Performance Testing project.
 
 ---
 
-## 17.10 Critical Performance Scenarios
+## 17.8 Performance Strategy Success Criteria
 
-Priority will be given to workflows with:
+The performance strategy is considered complete when:
 
-* High business impact
-* High traffic
-* High execution frequency
-* High technical complexity
-* Significant backend dependency
-* High user impact
-
-For nopCommerce, initial candidates include:
-
-```text
-Authentication
-      ↓
-Product Search
-      ↓
-Product Retrieval
-      ↓
-Cart Operations
-      ↓
-Checkout
-      ↓
-Order Creation
-```
+* Performance testing is identified as a separate quality activity.
+* Critical performance areas are identified.
+* The boundaries between functional and performance testing are clear.
+* The appropriate dedicated tooling is identified.
+* Detailed performance testing is planned as a separate project.
 
 ---
 
-## 17.11 Performance Data Strategy
+## Final Principle
 
-Performance testing requires controlled and representative test data.
-
-The project will use:
-
-* Dedicated performance accounts
-* Representative product data
-* Controlled search data
-* Controlled cart/order scenarios
-* Predictable API payloads
-
-Performance test data should not interfere with functional or regression tests.
-
-Where possible, performance execution should use a dedicated or isolated environment.
-
----
-
-## 17.12 Environment Strategy
-
-Performance testing should not be performed against production or shared environments without explicit authorization.
-
-Preferred model:
-
-```text
-Dedicated Performance Environment
-              ↓
-Controlled Configuration
-              ↓
-Controlled Test Data
-              ↓
-Performance Execution
-```
-
-The initial nopCommerce public demo environment may be suitable for functional experimentation, but it should **not be treated as a reliable production-scale performance environment** because its infrastructure, traffic, configuration, and resource availability are outside the project's control.
-
----
-
-## 17.13 Performance Test Isolation
-
-Performance execution should be separated from:
-
-* Functional regression execution
-* Smoke testing
-* Normal CI execution
-* Shared user environments
-
-The objective is to prevent load generation from producing false functional failures or affecting other users.
-
----
-
-## 17.14 Test Data Cleanup
-
-Performance-generated data should be managed carefully.
-
-Potential data includes:
-
-* Orders
-* Customers
-* Cart records
-* API-generated entities
-
-Where applicable, test data should be cleaned up or the performance environment should be reset after execution.
-
----
-
-## 17.15 Performance Results Analysis
-
-Performance results should be analyzed against:
-
-* Baseline
-* Defined thresholds
-* Previous executions
-* Workload levels
-* Error rates
-* Response-time distribution
-
-Example:
-
-```text
-Load Increased
-      ↓
-Throughput
-      ↓
-Response Time
-      ↓
-p95 / p99
-      ↓
-Error Rate
-      ↓
-System Stability
-```
-
-A performance issue should be supported by evidence rather than inferred from a single slow request.
-
----
-
-## 17.16 Bottleneck Investigation
-
-When performance degradation is identified, investigation should consider:
-
-* Application logic
-* Database queries
-* External integrations
-* Network latency
-* Resource saturation
-* Connection pools
-* Caching
-* API dependencies
-* Browser/client behavior
-
-Possible analysis flow:
-
-```text
-Performance Degradation
-        ↓
-Identify Affected Endpoint / Workflow
-        ↓
-Compare Response Metrics
-        ↓
-Check Errors
-        ↓
-Check Infrastructure Metrics
-        ↓
-Identify Bottleneck
-        ↓
-Validate Fix
-```
-
----
-
-## 17.17 Performance Regression Testing
-
-Performance should be compared across meaningful application or framework changes.
-
-Examples:
-
-* Major feature changes
-* API changes
-* Database changes
-* Query optimization
-* Architecture changes
-* Dependency upgrades
-
-The objective is to detect **performance regressions**, not simply functional regressions.
-
----
-
-## 17.18 CI/CD Integration
-
-Not all performance testing should execute on every pull request.
-
-A tiered strategy is preferred.
-
-### Pull Request
-
-Only lightweight performance checks where practical.
-
-### Main Branch
-
-Selected API performance checks.
-
-### Scheduled
-
-Broader load/performance scenarios.
-
-### Release / Performance Milestone
-
-Full performance test suite.
-
-Example:
-
-```text
-Pull Request
-    ↓
-Lightweight Performance Check
-
-Main Branch
-    ↓
-Selected API Checks
-
-Scheduled
-    ↓
-Load / Stress / Soak
-
-Release
-    ↓
-Full Performance Assessment
-```
-
----
-
-## 17.19 Performance Quality Gates
-
-Performance quality gates may include:
-
-* Response-time thresholds
-* p95/p99 limits
-* Error-rate thresholds
-* Throughput targets
-* Stability criteria
-
-Example:
-
-```text
-Performance Test
-      ↓
-Thresholds Met?
-   /          \
- YES          NO
- ↓             ↓
-PASS       Investigate
-```
-
-A performance gate should only be enforced where thresholds are agreed and meaningful.
-
----
-
-## 17.20 Performance Reporting
-
-Performance reports should include:
-
-* Test scenario
-* Workload
-* Duration
-* Virtual users
-* Ramp-up profile
-* Throughput
-* Response-time percentiles
-* Error rate
-* Threshold status
-* Environment
-* Test version/build
-* Significant observations
-
-Example:
-
-| Metric     |    Result |   Threshold | Status |
-| ---------- | --------: | ----------: | ------ |
-| p95        |    650 ms |   < 1000 ms | ✅      |
-| p99        |     1.1 s |       < 2 s | ✅      |
-| Error Rate |      0.4% |        < 1% | ✅      |
-| Throughput | 120 req/s | ≥ 100 req/s | ✅      |
-
----
-
-## 17.21 Performance Evidence
-
-Evidence may include:
-
-* k6 result output
-* Performance summary
-* Time-series metrics
-* Server/infrastructure metrics where available
-* Error logs
-* API response measurements
-* Threshold results
-* Comparison with baseline
-
-Performance evidence should be retained for important tests and regressions.
-
----
-
-## 17.22 Performance Defect Management
-
-A performance issue should be treated as a defect or performance investigation when evidence indicates that defined expectations are not met.
-
-Example:
-
-```text
-Performance Test
-      ↓
-Threshold Violated
-      ↓
-Reproduce / Validate
-      ↓
-Investigate
-      ↓
-Performance Defect
-      ↓
-Fix
-      ↓
-Retest
-      ↓
-Performance Regression
-```
-
-Performance defects should contain:
-
-* Workload
-* Environment
-* Build/version
-* Threshold
-* Observed result
-* Evidence
-* Reproduction conditions
-
----
-
-## 17.23 Performance Trend Analysis
-
-Results should be compared over time.
-
-Example:
-
-```text
-Release 1 → p95 = 600 ms
-Release 2 → p95 = 650 ms
-Release 3 → p95 = 780 ms
-Release 4 → p95 = 1.2 s
-```
-
-A sustained increase may indicate performance degradation even if functional tests continue to pass.
-
----
-
-## 17.24 Performance Success Criteria
-
-The performance strategy will be considered effective when:
-
-* Critical performance scenarios are identified.
-* Realistic workload models are defined.
-* Baselines are established.
-* Meaningful thresholds exist.
-* Load/stress behavior can be evaluated safely.
-* Performance regressions can be detected.
-* Results are reproducible within the controlled environment.
-* Performance evidence is available.
-* Significant bottlenecks can be investigated.
-* Results can support engineering decisions.
-
----
-
-## Final Performance Principle
-
-**Performance testing is not simply measuring how fast a page loads. It is the controlled evaluation of system behavior under realistic workloads, using measurable thresholds, repeatable experiments, and evidence-based analysis.**
+**The current nopCommerce project focuses on QA Automation Engineering and functional automation. Performance Testing will be developed separately as a dedicated specialization project rather than unnecessarily expanding the scope of this framework.**
 
