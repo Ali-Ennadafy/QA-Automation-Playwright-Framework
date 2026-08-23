@@ -7140,3 +7140,65 @@ The performance strategy is considered complete when:
 
 **The current nopCommerce project focuses on QA Automation Engineering and functional automation. Performance Testing will be developed separately as a dedicated specialization project rather than unnecessarily expanding the scope of this framework.**
 
+
+# 18. Entry Criteria
+
+Entry criteria define the minimum conditions that must be satisfied before a planned testing activity can begin.
+
+The purpose of entry criteria is to prevent testing from starting under conditions that would produce unreliable results, unnecessary rework, or misleading failures.
+
+Entry criteria may vary depending on the testing activity. Not every criterion must apply to every test cycle.
+
+---
+
+## 18.1 General Entry Criteria
+
+Testing may begin when the following conditions are satisfied:
+
+| ID | Entry Criterion | Purpose |
+|---|---|---|
+| EC-01 | In-scope requirements and acceptance criteria are available | Ensure expected behavior is defined |
+| EC-02 | Test scope and objectives are established | Define what will be validated |
+| EC-03 | Applicable risks and priorities are identified | Determine testing focus |
+| EC-04 | Test scenarios and test cases for the planned scope are prepared | Ensure executable test coverage exists |
+| EC-05 | Required test environment is available and accessible | Provide a usable execution environment |
+| EC-06 | The target application is deployed and reachable | Ensure the System Under Test is available |
+| EC-07 | Required test accounts, roles, and permissions are available | Support authenticated and role-based scenarios |
+| EC-08 | Required test data is prepared and validated | Prevent data-related false failures |
+| EC-09 | Required browsers and execution dependencies are available | Ensure automation can execute |
+| EC-10 | Playwright configuration is valid and executable | Ensure framework readiness |
+| EC-11 | Required external dependencies are available or their limitations are documented | Prevent unexpected blocking |
+| EC-12 | Defect tracking and reporting mechanisms are available | Support defect management |
+| EC-13 | Required environment variables and secrets are configured securely | Support safe execution |
+| EC-14 | No known blocking environment issue prevents the planned testing activity | Prevent invalid execution |
+
+---
+
+## 18.2 Automation Entry Criteria
+
+Before automated execution begins, the following should be verified:
+
+- Playwright dependencies are installed.
+- Required browsers are installed.
+- Playwright configuration is valid.
+- Required environment variables are available.
+- Required credentials are available through secure configuration.
+- Required test data is available.
+- Target environment is reachable.
+- Smoke/pre-test health checks are available where required.
+- The planned test suite is identifiable and executable.
+
+Example:
+
+```text
+Framework Ready
+      ↓
+Configuration Valid
+      ↓
+Environment Available
+      ↓
+Test Data Available
+      ↓
+Browsers Available
+      ↓
+Automation Ready
