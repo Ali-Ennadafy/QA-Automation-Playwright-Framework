@@ -7204,7 +7204,7 @@ Browsers Available
 Automation Ready
 
 
-# 19. Exit Criteria
+# 19. Exit Criteri
 
 Exit criteria define the conditions that must be satisfied before a planned testing activity can be considered complete.
 
