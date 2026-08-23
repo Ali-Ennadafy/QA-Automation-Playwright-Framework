@@ -6335,3 +6335,692 @@ Reporting is considered effective when the team can quickly determine:
 ## Final Reporting Principle
 
 **A test report should not merely show whether tests passed or failed. It should provide enough context, evidence, and traceability to support investigation, quality decisions, and continuous improvement.**
+
+# 16. Test Metrics
+
+The nopCommerce QA Automation Project will use a defined set of test and automation metrics to measure test progress, coverage, defect trends, automation reliability, execution efficiency, and overall quality risk.
+
+Metrics will be used to support informed QA and engineering decisions rather than to optimize for arbitrary numerical targets.
+
+The primary principle is:
+
+**Measure quality, risk, reliability, and value — not simply the number of tests executed.**
+
+---
+
+## 16.1 Test Execution Metrics
+
+### Test Execution Status
+
+Track the number of tests in each execution state:
+
+* Planned
+* Executed
+* Passed
+* Failed
+* Blocked
+* Skipped
+* Retried
+
+Example:
+
+| Metric   | Value |
+| -------- | ----: |
+| Planned  |   150 |
+| Executed |   140 |
+| Passed   |   128 |
+| Failed   |     8 |
+| Blocked  |     2 |
+| Skipped  |     2 |
+
+This provides visibility into the actual execution status.
+
+---
+
+## 16.2 Pass Rate
+
+Pass rate measures the percentage of executed tests that passed.
+
+```text id="wqf1v6"
+Pass Rate =
+Passed Tests
+───────────── × 100
+Executed Tests
+```
+
+Example:
+
+```text
+128 Passed
+140 Executed
+
+Pass Rate = 91.4%
+```
+
+Pass rate must always be interpreted together with blocked and skipped tests.
+
+A high pass rate does not necessarily mean high quality when important tests were not executed.
+
+---
+
+## 16.3 Failure Rate
+
+Failure rate measures the percentage of executed tests that failed.
+
+```text id="zuj4e2"
+Failure Rate =
+Failed Tests
+──────────── × 100
+Executed Tests
+```
+
+Failure trends are more useful than a single execution result.
+
+---
+
+## 16.4 Test Execution Completion
+
+Measures whether the planned test scope has actually been executed.
+
+```text id="tzh4qp"
+Execution Completion =
+Executed Tests
+────────────── × 100
+Planned Tests
+```
+
+Example:
+
+```text
+140 Executed
+150 Planned
+
+Completion = 93.3%
+```
+
+This prevents a misleading situation where a high pass rate is reported while a significant part of the planned scope was never executed.
+
+---
+
+## 16.5 Requirement Coverage
+
+Measures how many approved requirements have appropriate test coverage.
+
+```text id="r6z7yl"
+Requirement Coverage =
+Requirements With Test Coverage
+─────────────────────────────── × 100
+Total Approved Requirements
+```
+
+Example:
+
+```text
+45 Requirements Covered
+50 Approved Requirements
+
+Coverage = 90%
+```
+
+Critical requirements should be monitored separately rather than relying only on overall percentage.
+
+---
+
+## 16.6 Critical Requirement Coverage
+
+Measures coverage of P0/P1 or otherwise business-critical requirements.
+
+Example:
+
+| Critical Requirement | Test Coverage |
+| -------------------- | ------------- |
+| Authentication       | ✅             |
+| Checkout             | ✅             |
+| Order Placement      | ✅             |
+| Payment Boundary     | ✅             |
+| Order Management     | 🟡            |
+
+Critical requirement coverage should be treated as a higher-priority quality indicator than overall requirement coverage.
+
+---
+
+## 16.7 Test Case Coverage
+
+Measures how many defined test cases have actually been executed.
+
+```text id="m7wr1j"
+Test Case Execution Coverage =
+Executed Test Cases
+─────────────────── × 100
+Planned Test Cases
+```
+
+This metric should be interpreted with risk and test priority.
+
+---
+
+## 16.8 Automation Coverage
+
+Automation coverage should be measured against tests that are genuinely suitable for automation.
+
+```text id="p2k7y8"
+Automation Coverage =
+Automated Suitable Test Cases
+───────────────────────────── × 100
+Total Suitable Automation Candidates
+```
+
+Example:
+
+```text
+100 Total Test Cases
+80 Suitable for Automation
+60 Automated
+
+Automation Coverage = 75%
+```
+
+The project should not treat manual-only scenarios as automation gaps.
+
+---
+
+## 16.9 Critical Workflow Coverage
+
+Measures how many critical business workflows are protected by appropriate testing and automation.
+
+Initial nopCommerce workflows include:
+
+* Registration
+* Login
+* Product discovery
+* Shopping cart
+* Checkout
+* Order placement
+* Order confirmation
+* Customer account
+* Order history
+* Critical administration workflows
+
+Example:
+
+| Workflow          | Coverage |
+| ----------------- | -------- |
+| Login             | ✅        |
+| Product Discovery | ✅        |
+| Cart              | ✅        |
+| Checkout          | ✅        |
+| Order Placement   | ✅        |
+| Order History     | 🟡       |
+
+This metric is often more meaningful than raw automation percentage.
+
+---
+
+## 16.10 Regression Coverage
+
+Measures how much of the agreed regression scope is included in regression execution.
+
+```text id="w4b9r8"
+Regression Coverage =
+Regression Tests Included / Executed
+──────────────────────────────── × 100
+Agreed Regression Scope
+```
+
+Regression coverage should be monitored separately for:
+
+* Smoke Regression
+* Critical Regression
+* Full Regression
+
+---
+
+## 16.11 Defect Metrics
+
+The project will track:
+
+* Total defects
+* Open defects
+* Closed defects
+* Reopened defects
+* Critical defects
+* High-severity defects
+* Defects by module
+* Defects by release
+* Regression defects
+* Defects detected by automation
+* Defects detected manually
+
+Example:
+
+| Severity | Open | Closed | Reopened |
+| -------- | ---: | -----: | -------: |
+| Critical |    1 |      4 |        0 |
+| High     |    2 |      8 |        1 |
+| Medium   |    5 |     12 |        1 |
+| Low      |    3 |     10 |        0 |
+
+---
+
+## 16.12 Defect Density
+
+Defect density measures the number of defects relative to a defined unit of scope.
+
+Depending on the project, density may be measured by:
+
+* Feature
+* Requirement
+* Module
+* Release
+* Testable component
+
+Example:
+
+```text id="l5o0e8"
+Defect Density =
+Number of Defects
+────────────────
+Defined Scope Unit
+```
+
+Because nopCommerce is a portfolio project rather than a controlled commercial product with a formal code-size baseline, defect density should be used mainly for comparative trend analysis rather than treated as an absolute quality score.
+
+---
+
+## 16.13 Defect Leakage
+
+Measures defects discovered after the intended testing phase.
+
+Example:
+
+```text id="0w4d96"
+Defects Before Release = 95
+Defects After Release = 5
+```
+
+A simple leakage indicator may be:
+
+```text id="u0f0qf"
+Defect Leakage =
+Post-Release Defects
+──────────────────── × 100
+Total Known Defects
+```
+
+The objective is to identify quality gaps and recurring escape patterns.
+
+---
+
+## 16.14 Defect Reopen Rate
+
+Measures how frequently fixed defects are reopened.
+
+```text id="q6g9m2"
+Reopen Rate =
+Reopened Defects
+──────────────── × 100
+Fixed Defects
+```
+
+A high reopen rate may indicate:
+
+* Incomplete fixes
+* Weak retesting
+* Poor requirement understanding
+* Insufficient regression coverage
+
+---
+
+## 16.15 Defect Aging
+
+Measures how long defects remain unresolved.
+
+Example:
+
+| Defect         |    Age | Severity |
+| -------------- | -----: | -------- |
+| BUG-CHECK-001  |  1 day | Critical |
+| BUG-CART-004   | 4 days | High     |
+| BUG-SEARCH-002 | 8 days | Medium   |
+
+Defect age should be analyzed together with severity and priority.
+
+---
+
+## 16.16 Automation Stability Metrics
+
+The framework will monitor:
+
+* Flaky test rate
+* Retry rate
+* Repeated failures
+* Broken test count
+* CI-specific failures
+* Browser-specific failures
+
+### Flaky Test Rate
+
+```text id="q8c4z9"
+Flaky Test Rate =
+Flaky Test Executions
+──────────────────── × 100
+Total Test Executions
+```
+
+The objective is to continuously reduce flaky behavior.
+
+---
+
+## 16.17 Retry Rate
+
+Measures how often tests require retry execution.
+
+```text id="qz6i5o"
+Retry Rate =
+Retried Test Executions
+────────────────────── × 100
+Total Test Executions
+```
+
+A rising retry rate may indicate:
+
+* Flaky automation
+* Environment instability
+* Timing problems
+* CI infrastructure issues
+
+Retries should not be treated as a substitute for fixing flaky tests.
+
+---
+
+## 16.18 Test Execution Duration
+
+Execution duration should be monitored for each major suite.
+
+Track:
+
+* Smoke duration
+* API regression duration
+* UI regression duration
+* Full regression duration
+* Cross-browser duration
+
+Example:
+
+| Run    | Duration |
+| ------ | -------: |
+| Run 01 |      12m |
+| Run 02 |      10m |
+| Run 03 |       9m |
+| Run 04 |       8m |
+
+A sudden increase may indicate:
+
+* Increased test volume
+* Inefficient setup
+* Excessive waits
+* Slow application behavior
+* Poor parallelization
+* CI infrastructure issues
+
+---
+
+## 16.19 Test Efficiency
+
+Test efficiency can be monitored by comparing useful execution results against execution effort.
+
+Useful indicators include:
+
+* Execution duration
+* Tests executed per minute
+* Regression duration
+* Feedback time after code changes
+
+The goal is faster feedback without sacrificing meaningful coverage.
+
+---
+
+## 16.20 CI Stability Metrics
+
+The CI pipeline will track:
+
+* Successful pipeline runs
+* Failed pipeline runs
+* Infrastructure failures
+* Configuration failures
+* Test failures
+* Retry frequency
+* Average pipeline duration
+
+This helps distinguish:
+
+```text id="9t8k2w"
+Application Problem
+        ≠
+Automation Problem
+        ≠
+CI Infrastructure Problem
+```
+
+---
+
+## 16.21 Mean Time to Repair Automation
+
+Where meaningful, the project may monitor the average time required to restore a broken automated test.
+
+```text id="r9y3x1"
+MTTR =
+Total Automation Repair Time
+────────────────────────────
+Number of Repaired Failures
+```
+
+This metric helps identify maintenance bottlenecks.
+
+---
+
+## 16.22 Automation Maintenance Metrics
+
+Track:
+
+* Number of broken tests
+* Number of obsolete tests
+* Automation maintenance backlog
+* Number of affected tests after application changes
+* Technical-debt items
+* Average automation repair time
+
+These metrics help evaluate long-term framework health.
+
+---
+
+## 16.23 Test Stability Trend
+
+Metrics should be reviewed as trends rather than isolated numbers.
+
+Example:
+
+```text id="p7d5m3"
+Week 1 → Flaky Rate 5.0%
+Week 2 → Flaky Rate 3.8%
+Week 3 → Flaky Rate 2.4%
+Week 4 → Flaky Rate 1.2%
+```
+
+This provides more meaningful information than one execution snapshot.
+
+---
+
+## 16.24 Quality Risk Indicators
+
+The project should monitor indicators that may suggest increasing quality risk.
+
+Examples:
+
+* Increasing critical failures
+* Increasing defect leakage
+* Increasing reopen rate
+* Declining critical requirement coverage
+* Increasing flaky tests
+* Increasing execution time
+* Increasing blocked tests
+* Increasing regression failures
+* Growing automation maintenance backlog
+
+These indicators should trigger investigation rather than automatically define a release decision.
+
+---
+
+## 16.25 Metrics Dashboard
+
+A lightweight project dashboard may include:
+
+```text id="d7k2p4"
+┌─────────────────────────────────────────┐
+│             QA METRICS                  │
+├─────────────────────────────────────────┤
+│ Pass Rate              96%              │
+│ Requirement Coverage   94%              │
+│ Critical Coverage      100%             │
+│ Automation Coverage    82%              │
+│ Flaky Rate              1.2%            │
+│ Open Critical Defects   1               │
+│ Regression Duration     8m 42s          │
+├─────────────────────────────────────────┤
+│ Execution Trend                        │
+│ Defect Trend                           │
+│ Flaky Trend                            │
+│ Coverage Trend                          │
+│ CI Stability                           │
+└─────────────────────────────────────────┘
+```
+
+For this portfolio project, the dashboard can initially be represented through:
+
+* Playwright HTML reports
+* GitHub Actions summaries
+* RTM
+* Structured metrics files
+* Documentation
+
+A separate BI platform is not required initially.
+
+---
+
+## 16.26 Reporting Frequency
+
+| Metric Category      | Frequency                  |
+| -------------------- | -------------------------- |
+| Execution Metrics    | Every execution            |
+| Automation Stability | Every execution / periodic |
+| Regression Metrics   | Every regression cycle     |
+| Defect Metrics       | Every test cycle           |
+| Coverage Metrics     | Per milestone/release      |
+| CI Stability         | Every pipeline / periodic  |
+| Maintenance Metrics  | Periodic                   |
+| Quality Trends       | Weekly / milestone         |
+
+---
+
+## 16.27 Metrics Ownership
+
+| Metric Area                | Primary Owner                   |
+| -------------------------- | ------------------------------- |
+| Test Execution             | QA / QA Automation              |
+| Automation Health          | QA Automation Engineer          |
+| Coverage                   | QA / QA Lead                    |
+| Defects                    | QA / QA Lead                    |
+| CI Stability               | QA Automation / DevOps          |
+| Maintenance                | QA Automation Engineer          |
+| Release Quality Assessment | QA Lead / Relevant Stakeholders |
+
+---
+
+## 16.28 Metrics That Must Not Be Used as Standalone Goals
+
+The following should never be treated as proof of quality on their own:
+
+* Number of automated tests
+* Number of test cases
+* Automation percentage
+* Number of defects found
+* Raw pass rate
+* Execution volume
+
+For example:
+
+```text
+100% Pass Rate
++
+30% of tests skipped
++
+Checkout not tested
+```
+
+does not represent strong quality confidence.
+
+---
+
+## 16.29 Metrics Interpretation
+
+Metrics must always be interpreted in context.
+
+For example:
+
+```text
+High Pass Rate
++
+Low Requirement Coverage
+=
+Limited Confidence
+```
+
+or:
+
+```text
+High Automation Coverage
++
+High Flaky Rate
+=
+Low Automation Trust
+```
+
+or:
+
+```text
+High Test Coverage
++
+Critical Defects Open
+=
+Release Risk Remains
+```
+
+Metrics are indicators, not automatic release decisions.
+
+---
+
+## 16.30 Definition of Metrics Success
+
+The metrics strategy is considered effective when the team can determine:
+
+* How much testing has been completed.
+* Which requirements are covered.
+* Whether critical workflows are protected.
+* How stable the automation is.
+* Whether execution is becoming faster or slower.
+* Which defects remain unresolved.
+* Whether quality risks are increasing or decreasing.
+* Whether testing provides sufficient evidence for release decisions.
+
+---
+
+## Final Principle
+
+**Metrics exist to improve decisions, not to create impressive numbers.**
+
+The goal is to measure:
+
+**Coverage + Risk + Reliability + Efficiency + Defects + Trends**
+
+and use those measurements to continuously improve the quality of the application and the automation framework.
+
