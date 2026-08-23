@@ -7202,3 +7202,72 @@ Test Data Available
 Browsers Available
       ↓
 Automation Ready
+
+
+# 19. Exit Criteria
+
+Exit criteria define the conditions that must be satisfied before a planned testing activity can be considered complete.
+
+The purpose of exit criteria is to ensure that testing is not considered complete simply because the planned time has elapsed or a target number of tests has been executed.
+
+Testing completion will be evaluated based on coverage, critical business functionality, defect status, test results, residual risks, and available evidence.
+
+---
+
+## 19.1 General Exit Criteria
+
+Testing may be considered complete when the applicable criteria below have been satisfied:
+
+| ID | Exit Criterion | Purpose |
+|---|---|---|
+| XC-01 | Planned in-scope test cases have been executed, or documented justification exists for unexecuted cases | Confirm execution completeness |
+| XC-02 | Critical business workflows have been successfully validated | Protect core functionality |
+| XC-03 | Agreed test coverage has been achieved | Confirm sufficient coverage |
+| XC-04 | Critical defects have been resolved or formally accepted as risks | Control critical product risk |
+| XC-05 | High-priority defects have been resolved, accepted, or formally deferred | Control significant remaining risk |
+| XC-06 | Fixed defects have been successfully retested where applicable | Confirm defect resolution |
+| XC-07 | Relevant regression testing has been completed | Detect regression caused by changes |
+| XC-08 | Required Playwright automation suites have completed successfully or exceptions are documented | Validate automation scope |
+| XC-09 | Automation failures have been analyzed and classified | Distinguish product failures from test/environment issues |
+| XC-10 | Requirements and test results remain traceable | Maintain test evidence and coverage |
+| XC-11 | Required test and defect metrics have been collected | Support quality assessment |
+| XC-12 | Known limitations, blocked tests, deferred defects, and residual risks are documented | Provide transparency |
+| XC-13 | Required test evidence and reports are available | Support investigation and release decisions |
+| XC-14 | Test summary and final quality assessment are completed | Communicate final testing status |
+
+---
+
+## 19.2 Critical Workflow Exit Criteria
+
+The following critical workflows should be successfully validated before the corresponding testing scope is considered complete:
+
+- Authentication
+- Product discovery
+- Shopping cart
+- Checkout
+- Order placement
+- Order confirmation
+- Customer account management
+- Critical administration workflows
+
+A critical workflow should not be considered protected simply because individual UI actions within it passed.
+
+The complete business journey should be validated where applicable.
+
+Example:
+
+```text
+Login
+  ↓
+Search
+  ↓
+Product
+  ↓
+Cart
+  ↓
+Checkout
+  ↓
+Order
+  ↓
+Confirmation
+
