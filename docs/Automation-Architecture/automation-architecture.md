@@ -1,3 +1,18 @@
+# Automation Architecture
+
+## 1. Architecture Overview
+
+This project uses a layered Playwright automation architecture
+designed to support maintainability, reusability, scalability,
+and separation of responsibilities.
+
+The framework supports both UI and API automation.
+
+---
+
+## 2. Project Structure
+
+
 QA-Automation-playwright-framework/
 │
 ├── tests/
