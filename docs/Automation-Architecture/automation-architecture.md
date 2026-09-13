@@ -51,7 +51,9 @@ QA-Automation-Playwright-Framework/
 ├── .env.example
 ├── .gitignore
 └── README.md
+
 3. Architecture Layers
+
 3.1 Test Layer
 
 The tests/ directory contains automated test scenarios.
