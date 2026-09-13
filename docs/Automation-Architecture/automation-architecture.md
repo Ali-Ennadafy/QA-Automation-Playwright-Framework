@@ -1,7 +1,5 @@
 # Automation Architecture
 
-# Automation Architecture
-
 ## 1. Architecture Overview
 
 This project uses a layered Playwright automation architecture
