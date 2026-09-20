@@ -1,9 +1,15 @@
 export class LoginPage {
   constructor(page) {
     this.page = page;
+
+    this.emailInput = page.getByLabel('Email');
+    this.passwordInput = page.getByLabel('Password');
+    this.loginButton = page.getByRole('button', { name: 'Log in' });
   }
 
   async login(email, password) {
-    // login actions
+    await this.emailInput.fill(email);
+    await this.passwordInput.fill(password);
+    await this.loginButton.click();
   }
 }
