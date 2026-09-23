@@ -7,6 +7,18 @@ export class RegistrationPage {
         this.passwordInput = page.getByLabel('Password');
         this.confirmPasswordInput = page.getByLabel('Confirm Password');
         this.registerButton = page.getByRole('button', { name: 'Register' });
+        this .companyNameInput = page.getByLabel('Company Name');
+        this.GenderInput = page.getByLabel('Gender');
+            if (this.GenderInput) {
+                this.GenderInput.selectOption('Male');
+            }
+            else if (this.GenderInput) {
+                this.GenderInput.selectOption('Female');
+            }
+
+            else {
+                this.GenderInput.selectOption('Other');
+            }
     }
 
     async register(firstName, lastName, email, password, confirmPassword) {
@@ -16,5 +28,7 @@ export class RegistrationPage {
         await this.passwordInput.fill(password);
         await this.confirmPasswordInput.fill(confirmPassword);
         await this.registerButton.click();
+        await this.companyNameInput.fill('Test Company');
+        await this.GenderInput.selectOption('Male');
     }
 }
