@@ -7,7 +7,11 @@ export class RegistrationPage {
         this.passwordInput = page.getByLabel('Password');
         this.confirmPasswordInput = page.getByLabel('Confirm Password');
         this.registerButton = page.getByRole('button', { name: 'Register' });
-        this .companyNameInput = page.getByLabel('Company Name');
+        this.companyNameInput = page.getByLabel('Company Name');
+        this.NewsletterCheckbox = page.getByLabel('Subscribe to Newsletter');
+         if (this.NewsletterCheckbox) {
+            await this.NewsletterCheckbox.check();
+        }
         this.GenderInput = page.getByLabel('Gender');
             if (this.GenderInput) {
                 this.GenderInput.selectOption('Male');
@@ -30,5 +34,6 @@ export class RegistrationPage {
         await this.registerButton.click();
         await this.companyNameInput.fill('Test Company');
         await this.GenderInput.selectOption('Male');
+        await this.NewsletterCheckbox.check();
     }
 }
