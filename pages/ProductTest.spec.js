@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 import {ProductPage} from './ProductPage';
 
-test.describe('product page tests'), () => {
+test.describe('product page tests', () => {
     test('should add computer to cart with selected options', async ({page}) => {
         const prductPage = new ProductPage(page);
 
@@ -18,4 +18,4 @@ test.describe('product page tests'), () => {
         await productpage.clickAddToCart();
         await expect(productpage.successNotification).toBeVisible();
     });
-}
+})
