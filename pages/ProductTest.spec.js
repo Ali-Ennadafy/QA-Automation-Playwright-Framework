@@ -7,15 +7,15 @@ test.describe('product page tests', () => {
 
         await page.goto('https://demo.nopcommerce.com/build-your-own-computer');
 
-        await prductpage.selectDropdownOption('Processor', '2.5 GHz Intel Pentium Dual-Core E2200 [+$15.00]');
-        await prductpage.selectDropdownOption('RAM', '8GB [+$60.00]');
-        await prductpage.checkOption('HDD 400 GB [+$100.00]');
-        await prductpage.checkOption('Vista Premium [+$60.00]');
-        await productpage.checkOption('Microsoft Office [+$50.00]');
-        await productpage.fillCustomTextInput('Enter your text', 'My Custom Text');
-        await productpage.uploadProductFile('Upload your file', 'path/to/file.txt');
-        await productpage.setQuantity('2');
-        await productpage.clickAddToCart();
-        await expect(productpage.successNotification).toBeVisible();
+        await prductPage.selectDropdownOption('Processor', '2.5 GHz Intel Pentium Dual-Core E2200 [+$15.00]');
+        await prductPage.selectDropdownOption('RAM', '8GB [+$60.00]');
+        await prductPage.checkOption('HDD 400 GB [+$100.00]');
+        await prductPage.checkOption('Vista Premium [+$60.00]');
+        await prductPage.checkOption('Microsoft Office [+$50.00]');
+        await prductPage.fillCustomTextInput('Enter your text', 'My Custom Text');
+        await prductPage.uploadProductFile('Upload your file', 'path/to/file.txt');
+        await prductPage.setQuantity('2');
+        await prductPage.clickAddToCart();
+        await expect(prductPage.successNotification).toBeVisible();
     });
 })
