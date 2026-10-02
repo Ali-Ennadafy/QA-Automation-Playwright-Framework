@@ -2,7 +2,7 @@ export class RegistrationPage {
 
     constructor(page) {
         
-        #locators
+        //locators
         this.page = page;
         this.firstNameInput = page.getByLabel('First Name');
         this.lastNameInput = page.getByLabel('Last Name');
@@ -19,8 +19,15 @@ export class RegistrationPage {
 
     async register(firstName, lastName, email, password, confirmPassword, gender) {
    
-        #interactions
-        await this.maleRadioButton.click(gender === 'male');
+        //interactions
+        if (gender === 'male') {
+            await this.maleRadioButton.check();
+        }
+
+        if (gender === 'female') {
+            await this.femaleRadioButton.check();
+        }
+        
         await this.femaleRadioButton.click(gender === 'female');
         await this.firstNameInput.fill(firstName);
         await this.lastNameInput.fill(lastName);
