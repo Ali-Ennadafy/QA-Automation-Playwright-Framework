@@ -1,0 +1,20 @@
+services:
+
+  nopcommerce_web:
+    image: nopcommerceteam/nopcommerce:latest
+    container_name: nopcommerce_web
+    ports:
+      - "8080:80"
+    depends_on:
+      - nopcommerce_database
+    restart: unless-stopped
+
+  nopcommerce_database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: nopcommerce_database
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "NopCommerce_DB_Password123!"
+    ports:
+      - "1433:1433"
+    restart: unless-stopped
