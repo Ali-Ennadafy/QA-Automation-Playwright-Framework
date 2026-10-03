@@ -1,14 +1,26 @@
 export class ProductPage {
     constructor(page) {
         this.page = page;
-        this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
+
+        this.addToCartButton = page.getByRole('button', {
+            name: 'Add to cart'
+        });
+
         this.quantityInput = page.locator('.qty-input');
-        this.successNotification = page.locator('.bar-notification.success');
+
+        this.shoppingCartLink = page.getByRole('link', {
+            name: /Shopping cart \(\d+\)/
+        });
     }
 
-    async selectDropdownOption(labelName, optionText) {
-        await this.page.getByLabel(labelName).selectOption({ label: optionText });
+    async selectDropdownOption(attributeId, optionText) {
+        await this.page
+            .locator(`#product_attribute_${attributeId}`)
+            .selectOption({
+                label: optionText
+            });
     }
+
     async checkOption(optionLabel) {
         await this.page.getByLabel(optionLabel).check();
     }
@@ -24,8 +36,12 @@ export class ProductPage {
     async setQuantity(qty) {
         await this.quantityInput.fill(String(qty));
     }
+
     async clickAddToCart() {
         await this.addToCartButton.click();
     }
-}
 
+    async openShoppingCart() {
+    await this.shoppingCartLink.click();
+}
+}
