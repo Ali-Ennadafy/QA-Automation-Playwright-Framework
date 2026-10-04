@@ -55,12 +55,36 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
 
             await expect(productPage.shoppingCartLink).toContainText('(2)');
             await productPage.openShoppingCart();
+
             await expect(
                 page.getByRole('link', {
                     name: 'Build Your Own Computer',
                     exact: true
                 })
             ).toBeVisible();
+
+            await expect(productPage.cartAttributes).toContainText(
+                'Processor: 2.5 GHz Intel Pentium Dual-Core E2200 [+$15.00]'
+            );
+
+            await expect(productPage.cartAttributes).toContainText(
+                'RAM: 8GB [+$60.00]'
+            );
+
+            await expect(productPage.cartAttributes).toContainText(
+                'Software: Vista Premium [+$60.00]'
+            );
+
+            await expect(productPage.cartAttributes).toContainText(
+                'Software: Microsoft Office [+$50.00]'
+            );
+
+            await expect(
+                page.locator('#shopping-cart-form .attributes')
+            ).toContainText(option.size);
+
+            await expect(productPage.cartQuantityInput).toHaveValue('2');
+            await page.pause(); // Pause to observe the test execution
         });
     }
 });
