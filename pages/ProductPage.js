@@ -21,6 +21,10 @@ export class ProductPage {
         this.cartUnitPrice = page.locator(
             '#shopping-cart-form .product-unit-price'
         );
+
+        this.cartSubtotal = this.page.locator(
+            '#shopping-cart-form .product-subtotal'
+        );
     }
 
     async selectDropdownOption(attributeId, optionText) {

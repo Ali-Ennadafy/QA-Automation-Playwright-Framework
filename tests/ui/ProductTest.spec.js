@@ -8,11 +8,13 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
         {
             size: '320GB',
             unitPrice: '$285.00',
+            totalPrice: '$570.00',
             testName: 'Should buy computer with 320GB HDD'
         },
         {
             size: '400 GB [+$100.00]',
             unitPrice: '$385.00',
+            totalPrice: '$770.00',
             testName: 'Should buy computer with 400GB HDD'
         }
     ];
@@ -81,14 +83,15 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
                 'Software: Microsoft Office [+$50.00]'
             );
 
+            await expect(productPage.cartQuantityInput).toHaveValue('2');
+
             await expect(productPage.cartUnitPrice).toHaveText(option.unitPrice);
+
+            await expect(productPage.cartSubtotal).toHaveText(option.totalPrice);
 
             await expect(
                 page.locator('#shopping-cart-form .attributes')
             ).toContainText(option.size);
-
-            await expect(productPage.cartQuantityInput).toHaveValue('2');
-            await page.pause(); // Pause to observe the test execution
         });
     }
 });
