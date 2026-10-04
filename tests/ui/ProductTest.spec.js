@@ -7,10 +7,12 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
     const hddOptions = [
         {
             size: '320GB',
+            unitPrice: '$285.00',
             testName: 'Should buy computer with 320GB HDD'
         },
         {
             size: '400 GB [+$100.00]',
+            unitPrice: '$385.00',
             testName: 'Should buy computer with 400GB HDD'
         }
     ];
@@ -78,6 +80,8 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
             await expect(productPage.cartAttributes).toContainText(
                 'Software: Microsoft Office [+$50.00]'
             );
+
+            await expect(productPage.cartUnitPrice).toHaveText(option.unitPrice);
 
             await expect(
                 page.locator('#shopping-cart-form .attributes')

@@ -17,6 +17,10 @@ export class ProductPage {
         this.cartAttributes = page.locator(
             '#shopping-cart-form .attributes'
         );
+
+        this.cartUnitPrice = page.locator(
+            '#shopping-cart-form .product-unit-price'
+        );
     }
 
     async selectDropdownOption(attributeId, optionText) {
