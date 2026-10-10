@@ -22,6 +22,27 @@ export class CartPage {
         this.subtotal = page.locator(
             '#shopping-cart-form .product-subtotal'
         );
+
+        this.removeButton = page.locator(
+            'button.remove-btn[name="updatecart"]'
+        );
+
+        this.updateCartButton = page.getByRole('button', {
+            name: 'Update shopping cart'
+        });
+
+        this.emptyCartMessage = page.locator(
+            '.order-summary-content .no-data'
+        );
+    }
+
+    async removeProduct() {
+        await this.removeButton.click();
+    }
+
+    async updateQuantity(qty) {
+        await this.quantityInput.fill(String(qty));
+        await this.quantityInput.press('Enter');
     }
 
 }
