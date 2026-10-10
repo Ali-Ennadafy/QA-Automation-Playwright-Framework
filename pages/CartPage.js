@@ -23,4 +23,5 @@ export class CartPage {
             '#shopping-cart-form .product-subtotal'
         );
     }
+
 }
