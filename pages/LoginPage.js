@@ -1,16 +1,29 @@
+
 export class LoginPage {
-  constructor(page) {
-    this.page = page;
+    constructor(page) {
+        this.page = page;
 
-    this.emailInput = page.getByLabel('Email');
-    this.passwordInput = page.getByLabel('Password');
-    this.loginButton = page.getByRole('button', { name: 'Log in' });
-  }
+        // Locators
+        this.emailInput = page.getByLabel('Email');
+        this.passwordInput = page.getByLabel('Password');
+        this.loginButton = page.getByRole('button', {
+            name: 'Log in'
+        });
+        this.loginError = page.locator('.message-error');
+        this.logoutLink = page.getByRole('link', {
+            name: 'Log out'
+        });
+    }
 
-  async login(email, password) {
-    await this.emailInput.fill(email);
-    await this.passwordInput.fill(password);
-    await this.loginButton.click();
-  }
+    // Actions
+    async login(email, password) {
+        await this.emailInput.fill(email);
+        await this.passwordInput.fill(password);
+        await this.loginButton.click();
+    }
+
+    async logout() {
+        await this.logoutLink.click();
+    }
 }
 
