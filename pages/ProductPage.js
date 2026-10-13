@@ -2,6 +2,7 @@ export class ProductPage {
     constructor(page) {
         this.page = page;
         this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
+        this.addToWishlistButton = page.getByRole('button', { name: /Add to wishlist/i });
         this.quantityInput = page.locator('.qty-input');
 
         this.successNotification = page.locator('#bar-notification');
@@ -10,21 +11,6 @@ export class ProductPage {
             name: /Shopping cart \(\d+\)/
         });
 
-        this.cartQuantityInput = page.locator(
-            'input.qty-input[aria-label="Qty."]'
-        );
-
-        this.cartAttributes = page.locator(
-            '#shopping-cart-form .attributes'
-        );
-
-        this.cartUnitPrice = page.locator(
-            '#shopping-cart-form .product-unit-price'
-        );
-
-        this.cartSubtotal = this.page.locator(
-            '#shopping-cart-form .product-subtotal'
-        );
     }
 
     async selectDropdownOption(attributeId, optionText) {
@@ -58,5 +44,8 @@ export class ProductPage {
     async openShoppingCart() {
         await this.successNotification.waitFor({ state: 'hidden' });
         await this.shoppingCartLink.click();
+    }
+    async clickAddToWishlist() {
+        await this.addToWishlistButton.click();
     }
 }
