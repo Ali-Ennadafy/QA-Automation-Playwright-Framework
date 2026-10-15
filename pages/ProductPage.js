@@ -42,7 +42,7 @@ export class ProductPage {
     }
 
     async openShoppingCart() {
-        await this.successNotification.waitFor({ state: 'hidden' });
+        await this.shoppingCartLink.waitFor({ state: 'visible' });
         await this.shoppingCartLink.click();
     }
     async clickAddToWishlist() {
