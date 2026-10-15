@@ -8,7 +8,9 @@ test.describe('Shopping Cart Quantity Tests', () => {
         const productPage = new ProductPage(page);
         const cartPage = new CartPage(page);
 
-        await page.goto('/build-your-own-computer');
+        await page.goto('/build-your-own-computer', {
+            waitUntil: 'domcontentloaded'
+        });
 
         await productPage.selectDropdownOption(
             2,
@@ -23,6 +25,9 @@ test.describe('Shopping Cart Quantity Tests', () => {
 
         await productPage.setQuantity('1');
         await productPage.clickAddToCart();
+
+        await page.waitForTimeout(2000);
+        console.log(await productPage.successNotification.innerText());
 
         await expect(productPage.successNotification).toContainText(
             'The product has been added to your'
