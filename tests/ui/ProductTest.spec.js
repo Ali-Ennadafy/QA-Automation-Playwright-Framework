@@ -1,8 +1,31 @@
 const { test, expect } = require('@playwright/test');
 
 const { ProductPage } = require('../../pages/ProductPage');
+const { CartPage } = require('../../pages/CartPage');
 
 test.describe('NopCommerce Data-Driven Product Tests', () => {
+
+    
+        test('Should display Laptop details and add it to cart', async ({ page }) => {
+            const productPage = new ProductPage(page);
+
+            await page.goto('/qa-laptop')
+
+            await expect(
+                page.getByRole('heading', { name: 'Laptop' })
+            ).toBeVisible();
+
+            await expect(
+                page.getByText('$799.00', { exact: true })
+            ).toBeVisible();
+
+            await productPage.clickAddToCart();
+
+            await expect(productPage.successNotification).toContainText(
+                'The product has been added to your'
+            );
+        });
+
 
     const hddOptions = [
         {
@@ -26,6 +49,7 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
             test.setTimeout(120000);
 
             const productPage = new ProductPage(page);
+            const cartPage = new CartPage(page);
 
             await page.goto('/build-your-own-computer');
 
@@ -55,43 +79,38 @@ test.describe('NopCommerce Data-Driven Product Tests', () => {
             await productPage.setQuantity('2');
 
             await productPage.clickAddToCart();
-            
+            await expect(productPage.successNotification).toContainText(
+                'The product has been added to your'
+            );
 
             await expect(productPage.shoppingCartLink).toContainText('(2)');
             await productPage.openShoppingCart();
 
-            await expect(
-                page.getByRole('link', {
-                    name: 'Build Your Own Computer',
-                    exact: true
-                })
-            ).toBeVisible();
+            await expect(cartPage.productName).toBeVisible();
 
-            await expect(productPage.cartAttributes).toContainText(
+            await expect(cartPage.cartAttributes).toContainText(
                 'Processor: 2.5 GHz Intel Pentium Dual-Core E2200 [+$15.00]'
             );
 
-            await expect(productPage.cartAttributes).toContainText(
+            await expect(cartPage.cartAttributes).toContainText(
                 'RAM: 8GB [+$60.00]'
             );
 
-            await expect(productPage.cartAttributes).toContainText(
+            await expect(cartPage.cartAttributes).toContainText(
                 'Software: Vista Premium [+$60.00]'
             );
 
-            await expect(productPage.cartAttributes).toContainText(
+            await expect(cartPage.cartAttributes).toContainText(
                 'Software: Microsoft Office [+$50.00]'
             );
 
-            await expect(productPage.cartQuantityInput).toHaveValue('2');
+            await expect(cartPage.quantityInput).toHaveValue('2');
 
-            await expect(productPage.cartUnitPrice).toHaveText(option.unitPrice);
+            await expect(cartPage.unitPrice).toHaveText(option.unitPrice);
 
-            await expect(productPage.cartSubtotal).toHaveText(option.totalPrice);
+            await expect(cartPage.subtotal).toHaveText(option.totalPrice);
 
-            await expect(
-                page.locator('#shopping-cart-form .attributes')
-            ).toContainText(option.size);
+            await expect(cartPage.cartAttributes).toContainText(option.size);
         });
     }
 });
