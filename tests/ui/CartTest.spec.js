@@ -1,4 +1,3 @@
-
 const { test, expect } = require('@playwright/test');
 const { ProductPage } = require('../../pages/ProductPage');
 const { CartPage } = require('../../pages/CartPage');
