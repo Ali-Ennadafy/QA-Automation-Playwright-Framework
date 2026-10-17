@@ -1,10 +1,12 @@
 services:
 
   nopcommerce_web:
-    image: nopcommerceteam/nopcommerce:latest
+    image: nopcommerceteam/nopcommerce@sha256:a4043d78041cdf4aa7c2a68dea613212ba5841cf3a05b23ac0240ae258906a79
     container_name: nopcommerce_web
     ports:
       - "8080:80"
+    volumes:
+      - ./db/appsettings.json:/app/App_Data/appsettings.json
     depends_on:
       - nopcommerce_database
     restart: unless-stopped
