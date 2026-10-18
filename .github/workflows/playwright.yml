@@ -1,27 +1,115 @@
+
 name: Playwright Tests
+
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Start SQL Server
+        run: |
+          docker compose -f nopcommerce-environment/docker-compose.yml up -d nopcommerce_database
+
+      - name: Wait for SQL Server
+        shell: bash
+        run: |
+          ready=false
+
+          for i in {1..36}; do
+            if docker exec nopcommerce_database \
+              /opt/mssql-tools18/bin/sqlcmd \
+              -S localhost \
+              -U sa \
+              -P 'NopCommerce_DB_Password123!' \
+              -C -Q "SELECT 1"; then
+              ready=true
+              break
+            fi
+
+            echo "SQL Server not ready yet ($i/36)"
+            sleep 5
+          done
+
+          if [ "$ready" != "true" ]; then
+            echo "SQL Server did not become ready."
+            docker logs nopcommerce_database
+            exit 1
+          fi
+
+      - name: Restore database
+        run: |
+          test -f nopcommerce-environment/db/nop.bak
+
+          docker cp \
+            nopcommerce-environment/db/nop.bak \
+            nopcommerce_database:/var/opt/mssql/data/nop.bak
+
+          docker exec nopcommerce_database \
+            /opt/mssql-tools18/bin/sqlcmd \
+            -S localhost \
+            -U sa \
+            -P 'NopCommerce_DB_Password123!' \
+            -C -b \
+            -Q "RESTORE DATABASE [nopcommerce] FROM DISK='/var/opt/mssql/data/nop.bak' WITH REPLACE"
+
+      - name: Start nopCommerce
+        run: |
+          docker compose -f nopcommerce-environment/docker-compose.yml up -d nopcommerce_web
+          docker compose -f nopcommerce-environment/docker-compose.yml ps
+
+      - name: Wait for nopCommerce
+        shell: bash
+        run: |
+          ready=false
+
+          for i in {1..60}; do
+            if curl --silent --show-error --fail \
+              http://localhost:8080/ \
+              --output /dev/null; then
+              ready=true
+              break
+            fi
+
+            echo "nopCommerce not ready yet ($i/60)"
+            sleep 5
+          done
+
+          if [ "$ready" != "true" ]; then
+            echo "nopCommerce did not become ready."
+            docker compose -f nopcommerce-environment/docker-compose.yml logs --no-color
+            exit 1
+          fi
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Docker logs
+        if: failure()
+        run: |
+          docker compose -f nopcommerce-environment/docker-compose.yml logs --no-color
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
