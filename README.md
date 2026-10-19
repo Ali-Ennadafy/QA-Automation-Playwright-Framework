@@ -332,7 +332,7 @@ The project is being developed incrementally.
 - [x] Initial test strategy and test design
 - [x] Local nopCommerce environment using Docker
 - [x] Initial Playwright UI automation and page objects
-- [ ] Stabilize configuration and consolidate the test structure
+- [x] Stabilize configuration and consolidate the test structure
 - [ ] Expand negative and boundary-value scenarios
 - [ ] Complete and stabilize cart and checkout validation
 - [ ] Implement and verify API automation within this framework
