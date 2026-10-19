@@ -37,7 +37,7 @@ QA-Automation-Playwright-Framework/
 │   ├── SearchPage.js
 │   ├── CartPage.js
 │   ├── CheckoutPage.js
-│   └── AccountPage.js
+│ └── AccountPage.js
 │   └── WishlistPage.js
 │
 ├── components/
