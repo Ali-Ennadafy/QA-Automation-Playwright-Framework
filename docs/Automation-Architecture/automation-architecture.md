@@ -24,6 +24,7 @@ QA-Automation-Playwright-Framework/
 │   │   ├── cart/
 │   │   ├── checkout/
 │   │   └── account/
+│   │   └── wishlist/
 │   │
 │   └── api/
 │       ├── users/
