@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { randomUUID } = require('node:crypto');
-const { RegistrationPage } = require('../../pages/RegistrationPage');
-const { userData } = require('../../test-data/userData');
+const { RegistrationPage } = require('../../../pages/RegistrationPage');
+const { userData } = require('../../../test-data/userData');
 
 test.describe('Registration UI Tests', () => {
     test('Should register a new user successfully', async ({ page }) => {

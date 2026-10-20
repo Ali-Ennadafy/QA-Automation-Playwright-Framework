@@ -1,6 +1,6 @@
 
 const { test, expect } = require('@playwright/test');
-const { ProductPage } = require('../../pages/ProductPage');
+const { ProductPage } = require('../../../pages/ProductPage');
 
 test.describe('Wishlist UI Tests', () => {
 

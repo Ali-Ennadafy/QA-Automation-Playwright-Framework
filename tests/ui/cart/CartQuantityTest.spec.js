@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { ProductPage } = require('../../pages/ProductPage');
-const { CartPage } = require('../../pages/CartPage');
+const { ProductPage } = require('../../../pages/ProductPage');
+const { CartPage } = require('../../../pages/CartPage');
 
 test.describe('Shopping Cart Quantity Tests', () => {
 

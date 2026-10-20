@@ -1,7 +1,7 @@
 
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../pages/LoginPage');
-const { userData } = require('../../test-data/userData');
+const { LoginPage } = require('../../../pages/LoginPage');
+const { userData } = require('../../../test-data/userData');
 
 test.describe('Login UI Tests', () => {
 
