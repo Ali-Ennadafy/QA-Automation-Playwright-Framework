@@ -5,7 +5,7 @@ const { ProductPage } = require('../../../pages/ProductPage');
 test.describe('Wishlist UI Tests', () => {
 
     test('Should add a configured product to the wishlist', async ({ page }) => {
-        
+
         const productPage = new ProductPage(page);
 
         await page.goto('/build-your-own-computer');
