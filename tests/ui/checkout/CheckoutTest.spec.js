@@ -1,4 +1,3 @@
-
 const { test, expect } = require('@playwright/test');
 const { ProductPage } = require('../../../pages/ProductPage');
 const { CartPage } = require('../../../pages/CartPage');
@@ -49,6 +48,7 @@ test.describe('Checkout tests', () => {
         await cartPage.acceptTermsOfService();
         await cartPage.proceedToCheckout();
 
+        
         // Guest checkout page
         await expect(page).toHaveURL(/\/login\/checkoutasguest/);
 
@@ -59,7 +59,50 @@ test.describe('Checkout tests', () => {
         // One-page checkout
         await expect(page).toHaveURL(/\/onepagecheckout/);
 
-        // Step 1: Continue from Billing Address
+        // Fill Billing Address
+        await checkoutPage.fillBillingAddress();
+
+        // Continue from Billing Address
         await checkoutPage.continueFromBillingAddress();
+        
+        await page.waitForTimeout(1000);
+
+        console.log('URL after Continue:', page.url());
+
+        console.log(
+            'Validation errors:',
+            await page.locator('.field-validation-error, .validation-summary-errors')
+                .allTextContents()
+        );
+
+        console.log(
+            'Visible checkout step:',
+            await page.locator('.step-title, .section-title')
+                .allTextContents()
+        );
+
+        // Inspect the next checkout step
+        await page.waitForTimeout(1500);
+
+        console.log('Current URL:', page.url());
+
+        console.log(
+            'Page title:',
+            await page.title().catch(() => 'Page closed')
+        );
+
+        console.log(
+            'Ground visible:',
+            await page.getByLabel(/Ground/).isVisible().catch(() => false)
+        );
+
+        console.log(
+            'Continue buttons:',
+            await page.getByRole('button', {
+                name: 'Continue',
+                exact: true
+            }).count().catch(() => 0)
+        );
+
     });
 });
