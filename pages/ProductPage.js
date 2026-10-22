@@ -1,11 +1,14 @@
 export class ProductPage {
     constructor(page) {
         this.page = page;
-        this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
+        this.addToCartButton = page.locator(
+            '#product-details-form button.add-to-cart-button'
+        );
         this.addToWishlistButton = page.getByRole('button', { name: /Add to wishlist/i });
         this.quantityInput = page.locator('.qty-input');
 
         this.successNotification = page.locator('#bar-notification');
+        this.notificationCloseButton = page.locator('#bar-notification .close');
 
         this.shoppingCartLink = page.getByRole('link', {
             name: /Shopping cart \(\d+\)/
@@ -43,7 +46,14 @@ export class ProductPage {
 
     async openShoppingCart() {
         await this.shoppingCartLink.waitFor({ state: 'visible' });
+
+        if (await this.notificationCloseButton.isVisible()) {
+            await this.notificationCloseButton.click();
+        }
+
         await this.shoppingCartLink.click();
+
+        await this.page.waitForURL(/\/cart(?:\?.*)?$/);
     }
     async clickAddToWishlist() {
         await this.addToWishlistButton.click();

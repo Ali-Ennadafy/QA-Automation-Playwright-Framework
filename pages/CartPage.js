@@ -34,6 +34,10 @@ export class CartPage {
         this.emptyCartMessage = page.locator(
             '.order-summary-content .no-data'
         );
+
+        this.termsOfServiceCheckbox = this.page.getByRole('checkbox', {
+            name: /I agree with the terms of service/
+        });
     }
 
     async removeProduct() {
@@ -43,6 +47,23 @@ export class CartPage {
     async updateQuantity(qty) {
         await this.quantityInput.fill(String(qty));
         await this.quantityInput.press('Enter');
+    }
+
+    async proceedToCheckout() {
+        await this.page.getByRole('button', {
+            name: 'Checkout',
+            exact: true
+        }).click();
+    }
+
+    async acceptTermsOfService() {
+        await this.termsOfServiceCheckbox.check();
+    }
+
+    async checkoutAsGuest() {
+        await this.page.getByRole('button', {
+            name: 'Checkout as Guest'
+        }).click();
     }
 
 }
