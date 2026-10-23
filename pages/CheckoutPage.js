@@ -1,3 +1,4 @@
+const { expect } = require('@playwright/test');
 
 export class CheckoutPage {
     constructor(page) {
@@ -32,10 +33,16 @@ export class CheckoutPage {
         this.lastNameInput = page.locator('#BillingNewAddress_LastName');
         this.emailInput = page.locator('#BillingNewAddress_Email');
         this.countryDropdown = page.locator('#BillingNewAddress_CountryId');
+
+        this.stateDropdown = page.locator(
+            '#BillingNewAddress_StateProvinceId'
+        );
+
         this.cityInput = page.locator('#BillingNewAddress_City');
         this.address1Input = page.locator('#BillingNewAddress_Address1');
         this.zipPostalCodeInput = page.locator('#BillingNewAddress_ZipPostalCode');
         this.phoneNumberInput = page.locator('#BillingNewAddress_PhoneNumber');
+        this.groundShipping = this.page.locator('#shippingoption_0');
 
         this.billingContinueButton = page.locator(
             '#billing-buttons-container'
@@ -43,6 +50,21 @@ export class CheckoutPage {
             name: 'Continue',
             exact: true
         });
+
+                // Payment method
+        this.checkMoneyOrder = page.locator('#paymentmethod_0');
+
+        this.paymentMethodContinueButton = page
+            .locator('#payment-method-buttons-container')
+            .getByRole('button', {
+                name: 'Continue',
+                exact: true
+            });
+
+        // Payment information
+        this.paymentInfoSection = page.locator(
+            '#checkout-step-payment-info'
+        );
     }
 
     async selectDropdownOption(attributeId, optionText) {
@@ -52,13 +74,47 @@ export class CheckoutPage {
     }
 
     async selectShippingMethod() {
+        await this.page.locator('#shipping-methods-form').waitFor({
+            state: 'visible'
+        });
+
         await this.groundShipping.check();
-        await this.continueButton.click();
+
+        const continueButton = this.page
+            .locator('#shipping-method-buttons-container')
+            .getByRole('button', {
+                name: 'Continue',
+                exact: true
+            });
+
+        await continueButton.click();
+
+        await this.page.waitForURL(/#opc-payment_method/);
     }
 
+    
     async selectPaymentMethod() {
+        const paymentContinueButton = this.page
+            .locator('#payment-method-buttons-container')
+            .getByRole('button', {
+                name: 'Continue',
+                exact: true
+            });
+
         await this.checkMoneyOrder.check();
-        await this.continueButton.click();
+
+        await expect(paymentContinueButton).toBeEnabled();
+        await paymentContinueButton.click();
+
+        const paymentInfoContinueButton = this.page
+            .locator('#payment-info-buttons-container')
+            .getByRole('button', {
+                name: 'Continue',
+                exact: true
+            });
+
+        await expect(paymentInfoContinueButton).toBeVisible();
+        await expect(paymentInfoContinueButton).toBeEnabled();
     }
 
     async confirmOrder() {
@@ -73,36 +129,24 @@ export class CheckoutPage {
 
         await this.billingContinueButton.click();
 
-        await this.page.waitForTimeout(1500);
+        // Wait until checkout advances to Shipping method
+        await this.page.waitForURL(/#opc-shipping_method/);
 
-        console.log('URL:', this.page.url());
-
-        console.log(
-            'Billing section visible:',
-            await this.page.locator('#checkout-step-billing').isVisible()
-                .catch(() => false)
-        );
-
-        console.log(
-            'Billing button text:',
-            await this.billingContinueButton.textContent()
-                .catch(() => 'Button not found')
-        );
-
-        console.log(
-            'Visible errors:',
-            await this.page.locator(
-                '.message-error, .field-validation-error, .validation-summary-errors'
-            ).allTextContents()
-        );
+        await this.page.locator('#shipping-methods-form').waitFor({
+            state: 'visible'
+        });
     }
 
-    async fillBillingAddress() {
+   async fillBillingAddress() {
+
         await this.firstNameInput.fill('Ali');
         await this.lastNameInput.fill('Test');
         await this.emailInput.fill('ali.qa.automation@example.com');
 
         await this.countryDropdown.selectOption({ label: 'Morocco' });
+
+        // Select the required state/province
+        await this.stateDropdown.selectOption({ label: 'Safi' });
 
         await this.cityInput.fill('Safi');
         await this.address1Input.fill('Test Address');
@@ -115,4 +159,33 @@ export class CheckoutPage {
         await this.continueButton.click();
     }
 
+    
+    async continueFromPaymentInfo() {
+        const continueButton = this.page
+            .locator('#payment-info-buttons-container')
+            .getByRole('button', {
+                name: 'Continue',
+                exact: true
+            });
+
+        await expect(continueButton).toBeVisible();
+        await continueButton.click();
+    }
+
+    async confirmOrder() {
+        const confirmButton = this.page.locator(
+            '#confirm-order-buttons-container'
+        ).getByRole('button', {
+            name: 'Confirm',
+            exact: true
+        });
+
+        await confirmButton.waitFor({ state: 'visible' });
+        await confirmButton.click();
+
+        await this.orderSuccessMessage.waitFor({
+            state: 'visible',
+            timeout: 30000
+        });
+    }
 }
