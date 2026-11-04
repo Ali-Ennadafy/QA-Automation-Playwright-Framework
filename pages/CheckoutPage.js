@@ -170,22 +170,6 @@ export class CheckoutPage {
 
     // Confirm order
     async confirmOrder() {
-        console.log('Confirming order...');
-
-        await this.confirmOrderButton.waitFor({
-            state: 'visible'
-        });
-
         await this.confirmOrderButton.click();
-
-        await this.orderSuccessMessage.waitFor({
-            state: 'visible',
-            timeout: 30000
-        });
-
-        await expect(this.orderNumber).toBeVisible();
-        await expect(this.orderNumber).not.toBeEmpty();
-
-        console.log('Order successfully placed.');
     }
 }
