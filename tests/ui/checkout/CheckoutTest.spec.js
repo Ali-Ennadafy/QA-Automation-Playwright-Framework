@@ -50,26 +50,7 @@ test.describe('Checkout tests', () => {
         await expect(page).toHaveURL(/\/onepagecheckout/);
 
         // Billing address
-        await checkoutPage.fillBillingAddress();
-
-        // Capture the Billing response for diagnostics
-        page.on('response', async response => {
-            if (response.url().includes('/checkout/OpcSaveBilling/')) {
-                console.log('Billing response status:', response.status());
-
-                try {
-                    console.log(
-                        'Billing response body:',
-                        await response.text()
-                    );
-                } catch (error) {
-                    console.log(
-                        'Could not read billing response:',
-                        error.message
-                    );
-                }
-            }
-        });
+        await checkoutPage.fillBillingAddress()
 
         await checkoutPage.continueFromBillingAddress();
 
@@ -97,33 +78,6 @@ test.describe('Checkout tests', () => {
                 exact: true
             });
 
-        page.on('response', async response => {
-            if (response.url().includes('/checkout/OpcSavePaymentInfo/')) {
-                console.log(
-                    'Payment info response status:',
-                    response.status()
-                );
-
-                try {
-                    console.log(
-                        'Payment info response body:',
-                        await response.text()
-                    );
-                } catch (error) {
-                    console.log('Could not read response:', error.message);
-                }
-            }
-        });
-
-        console.log(
-            'Payment info Continue disabled:',
-            await paymentInfoContinueButton.isDisabled()
-        );
-
-        console.log(
-            'Payment info loading indicator:',
-            await page.locator('#payment-info-please-wait').isVisible()
-        );
         await checkoutPage.continueFromPaymentInfo();
 
         const confirmOrderSection = page.locator(
@@ -135,56 +89,6 @@ test.describe('Checkout tests', () => {
         await expect(
             confirmOrderSection.locator('.order-summary-content')
         ).toBeVisible();
-
-        console.log('Confirm Order section is visible.');
-
-        console.log('URL after Payment information:', page.url());
-
-        console.log(
-            'Confirm order section count:',
-            await page.locator('#checkout-step-confirm-order').count()
-        );
-
-        console.log(
-            'Confirm order HTML:',
-            await page.locator('#checkout-step-confirm-order')
-                .evaluate(element => element.outerHTML)
-                .catch(() => 'Selector not found')
-        );
-
-        // Inspect Payment information
-        console.log('URL after Payment method:', page.url());
-
-        console.log(
-            'Payment information section count:',
-            await page.locator('#checkout-step-payment-info').count()
-        );
-
-        console.log(
-            'Payment information HTML:',
-            await page.locator('#checkout-step-payment-info')
-                .evaluate(element => element.outerHTML)
-                .catch(() => 'Selector not found')
-        );
-
-        // Diagnostic: inspect Payment method section
-        console.log('Current URL:', page.url());
-
-        const paymentSection = page.locator(
-            '#checkout-step-payment-method'
-        );
-
-        console.log(
-            'Payment method section count:',
-            await paymentSection.count()
-        );
-
-        console.log(
-            'Payment method HTML:',
-            await paymentSection
-                .evaluate(element => element.outerHTML)
-                .catch(() => 'Selector not found')
-        );
 
         await checkoutPage.confirmOrder();
 
