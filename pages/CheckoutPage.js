@@ -74,13 +74,6 @@ export class CheckoutPage {
         );
     }
 
-    // Product configuration
-    async selectDropdownOption(attributeId, optionText) {
-        await this.page
-            .locator(`#product_attribute_${attributeId}`)
-            .selectOption({ label: optionText });
-    }
-
     // Billing address
     async fillBillingAddress() {
         console.log('Filling billing address...');
